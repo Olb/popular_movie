@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
-    private List<Movie> mMovieList;
+    private final List<Movie> mMovieList;
 
     final private ListItemClickListener mOnClickListener;
 
@@ -37,9 +37,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movie_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
 
         return new MovieAdapterViewHolder(view);
     }
@@ -56,17 +55,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView mMovieImageView;
+        private final ImageView mMovieImageView;
 
-        public MovieAdapterViewHolder(final View itemView) {
+        MovieAdapterViewHolder(final View itemView) {
             super(itemView);
 
-            mMovieImageView = (ImageView) itemView.findViewById(R.id.iv_movie_image_view);
+            mMovieImageView = itemView.findViewById(R.id.iv_movie_image_view);
 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(int position) {
+        void bind(int position) {
             Movie movie = mMovieList.get(position);
             String moviePath = NetworkUtils.IMAGES_BASE_URL + movie.getPosterPath();
             Log.d("List Item URL", moviePath);

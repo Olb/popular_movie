@@ -24,7 +24,7 @@ public class Converter {
 
     private static void instantiateMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        reader = mapper.reader(MovieResults.class);
+        reader = mapper.readerFor(MovieResults.class);
         writer = mapper.writerFor(MovieResults.class);
     }
 

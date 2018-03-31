@@ -25,10 +25,11 @@ import com.flx.popmovies.utils.Converter;
 import com.flx.popmovies.utils.NetworkUtils;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener{
 
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private static final String SORT_TOP_RATED = "vote_average.desc";
 
     private RecyclerView mMovieRecyclerView;
-    private MovieAdapter mMovieAdapter;
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageTextView;
     private String mSortParam;
@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMovieRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_tiles);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_movies);
-        mErrorMessageTextView = (TextView) findViewById(R.id.tv_no_results_or_error_message);
+        mMovieRecyclerView = findViewById(R.id.rv_movie_tiles);
+        mLoadingIndicator = findViewById(R.id.pb_loading_movies);
+        mErrorMessageTextView = findViewById(R.id.tv_no_results_or_error_message);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
 
@@ -71,18 +71,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mErrorMessageTextView.setText(R.string.no_results_message);
         mErrorMessageTextView.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
-        new FetchMoviesTask().execute(sortParam);
+        new FetchMoviesTask(this).execute(sortParam);
     }
 
-    private class FetchMoviesTask extends AsyncTask<String, Void, MovieResults> {
+    private static class FetchMoviesTask extends AsyncTask<String, Void, MovieResults> {
+
+        private final WeakReference<MainActivity> mainActivityWeakReference;
+        final String API_KEY;
+
+        FetchMoviesTask(MainActivity context) {
+            mainActivityWeakReference = new WeakReference<>(context);
+            /* API Key for themoviedb.org */
+            API_KEY =  context.getResources().getString(R.string.movie_db_api_key);
+        }
 
         @Override
         protected MovieResults doInBackground(String... params) {
 
             String sortParam = params[0];
-            
-            /* API Key for themoviedb.org */
-            String API_KEY =  getResources().getString(R.string.movie_db_api_key);
+
             URL movieUrl = NetworkUtils.buildMovieListUrl(sortParam, API_KEY);
 
             try {
@@ -97,19 +104,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         @Override
         protected void onPostExecute(MovieResults movieResults) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
 
+            MainActivity activity = mainActivityWeakReference.get();
+
+            if (activity == null || activity.isFinishing()) {
+                return;
+            }
+
+            activity.findViewById(R.id.pb_loading_movies).setVisibility(View.INVISIBLE);
+
+            TextView errorMessageTextView = activity.findViewById(R.id.tv_no_results_or_error_message);
             if (movieResults == null) {
-                mErrorMessageTextView.setText(R.string.error_message);
-                mErrorMessageTextView.setVisibility(View.VISIBLE);
+                errorMessageTextView.setText(R.string.error_message);
+                errorMessageTextView.setVisibility(View.VISIBLE);
                 return;
             } else if (movieResults.getMovies().length == 0) {
-                mErrorMessageTextView.setVisibility(View.VISIBLE);
+                errorMessageTextView.setVisibility(View.VISIBLE);
             }
 
             List<Movie> movieList = Arrays.asList(movieResults.getMovies());
-            mMovieAdapter = new MovieAdapter(movieList, MainActivity.this);
-            mMovieRecyclerView.setAdapter(mMovieAdapter);
+            MovieAdapter mMovieAdapter = new MovieAdapter(movieList, activity);
+            ((RecyclerView) activity.findViewById(R.id.rv_movie_tiles)).setAdapter(mMovieAdapter);
         }
     }
 
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         Class detailsActivity = DetailsActivity.class;
 
         Intent startDetailsActivityIntent = new Intent(context, detailsActivity);
-        startDetailsActivityIntent.putExtra(Constants.COM_POPMOVIE_DETAILS_INTENT, (Serializable) clickedMovie);
+        startDetailsActivityIntent.putExtra(Constants.COM_POPMOVIE_DETAILS_INTENT, clickedMovie);
 
         startActivity(startDetailsActivityIntent);
     }
@@ -154,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

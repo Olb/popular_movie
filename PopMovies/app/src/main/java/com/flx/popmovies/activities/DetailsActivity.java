@@ -25,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Objects;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -41,11 +43,11 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mMovieTitleTextView = (TextView) findViewById(R.id.tv_movie_title);
-        mMoviePosterImageView = (ImageView) findViewById(R.id.iv_movie_poster);
-        mMovieReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_release_date);
-        mMovieRatingTextView = (TextView) findViewById(R.id.tv_movie_rating);
-        mMovieSynopsisTextView = (TextView) findViewById(R.id.tv_movie_synopsis);
+        mMovieTitleTextView = findViewById(R.id.tv_movie_title);
+        mMoviePosterImageView = findViewById(R.id.iv_movie_poster);
+        mMovieReleaseDateTextView = findViewById(R.id.tv_movie_release_date);
+        mMovieRatingTextView = findViewById(R.id.tv_movie_rating);
+        mMovieSynopsisTextView = findViewById(R.id.tv_movie_synopsis);
 
         if (!checkConnectivity()) {
             return;
@@ -76,21 +78,20 @@ public class DetailsActivity extends AppCompatActivity {
 
         String releaseDateAsString = String.valueOf(stringToDateReport(movie.getReleaseDate()));
         mMovieReleaseDateTextView.setText(releaseDateAsString);
-        mMovieRatingTextView.setText(movie.getVoteAverage() + "/10");
+
+        String rating = movie.getVoteAverage() + getString(R.string.max_vote_denominator);
+        mMovieRatingTextView.setText(rating);
+
         mMovieSynopsisTextView.setText(movie.getOverview());
     }
 
     private String stringToDateReport(String s){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy");
-        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy", Locale.US);
+        Date date;
 
         try {
             date = format.parse(s);
-        } catch (ParseException e) {
-            //you should do a real logging here
-            e.printStackTrace();
-            return "";
-        } catch (java.text.ParseException e) {
+        } catch (ParseException | java.text.ParseException e) {
             e.printStackTrace();
             return "";
         }
@@ -115,7 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

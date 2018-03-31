@@ -5,7 +5,5 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorWhiteText">#FFFFFF</color>
     <color name="colorDetailsTitleBackground">#009788</color>
-    <color name="colorMarkFavoriteButtonBackground">#83E1D8</color>
-    <color name="colorMarkFavoriteButtonText">#909090</color>
     <color name="colorLineViewBackground">#808080</color>
 </resources>
