@@ -1,4 +1,4 @@
-# popular_movie
+# Popular Movies
 Android app for displaying popular movies from themoviedb.org
 
 Note: Requires an API key from www.themoviedb.org
