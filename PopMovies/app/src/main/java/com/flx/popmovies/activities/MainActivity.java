@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,24 +17,21 @@ import android.widget.TextView;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.adapters.MovieAdapter;
+import com.flx.popmovies.interfaces.AsyncTaskCompleteListener;
 import com.flx.popmovies.models.Movie;
 import com.flx.popmovies.models.MovieResults;
 import com.flx.popmovies.utils.Constants;
-import com.flx.popmovies.utils.Converter;
-import com.flx.popmovies.utils.NetworkUtils;
+import com.flx.popmovies.utils.FetchMoviesTask;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener{
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener, AsyncTaskCompleteListener {
 
     private static final int GRID_SPAN_COUNT = 2;
-    private static final String SORT_POPULARITY = "popularity.desc";
-    private static final String SORT_TOP_RATED = "vote_average.desc";
+    private static final String SORT_POPULARITY = "popular";
+    private static final String SORT_TOP_RATED = "top_rated";
 
     private RecyclerView mMovieRecyclerView;
     private ProgressBar mLoadingIndicator;
@@ -71,61 +67,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mErrorMessageTextView.setText(R.string.no_results_message);
         mErrorMessageTextView.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
+
         new FetchMoviesTask(this).execute(sortParam);
     }
 
-    private static class FetchMoviesTask extends AsyncTask<String, Void, MovieResults> {
+    @Override
+    public void onTaskComplete(Object result) {
+        MovieResults results = (MovieResults) result;
 
-        private final WeakReference<MainActivity> mainActivityWeakReference;
-        final String API_KEY;
+        this.findViewById(R.id.pb_loading_movies).setVisibility(View.INVISIBLE);
 
-        FetchMoviesTask(MainActivity context) {
-            mainActivityWeakReference = new WeakReference<>(context);
-            /* API Key for themoviedb.org */
-            API_KEY =  context.getResources().getString(R.string.movie_db_api_key);
+        TextView errorMessageTextView = this.findViewById(R.id.tv_no_results_or_error_message);
+        if (results == null) {
+            errorMessageTextView.setText(R.string.error_message);
+            errorMessageTextView.setVisibility(View.VISIBLE);
+            return;
+        } else if (results.getMovies().length == 0) {
+            errorMessageTextView.setVisibility(View.VISIBLE);
         }
 
-        @Override
-        protected MovieResults doInBackground(String... params) {
-
-            String sortParam = params[0];
-
-            URL movieUrl = NetworkUtils.buildMovieListUrl(sortParam, API_KEY);
-
-            try {
-                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieUrl);
-                return Converter.fromJsonString(jsonMovieResponse);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(MovieResults movieResults) {
-
-            MainActivity activity = mainActivityWeakReference.get();
-
-            if (activity == null || activity.isFinishing()) {
-                return;
-            }
-
-            activity.findViewById(R.id.pb_loading_movies).setVisibility(View.INVISIBLE);
-
-            TextView errorMessageTextView = activity.findViewById(R.id.tv_no_results_or_error_message);
-            if (movieResults == null) {
-                errorMessageTextView.setText(R.string.error_message);
-                errorMessageTextView.setVisibility(View.VISIBLE);
-                return;
-            } else if (movieResults.getMovies().length == 0) {
-                errorMessageTextView.setVisibility(View.VISIBLE);
-            }
-
-            List<Movie> movieList = Arrays.asList(movieResults.getMovies());
-            MovieAdapter mMovieAdapter = new MovieAdapter(movieList, activity);
-            ((RecyclerView) activity.findViewById(R.id.rv_movie_tiles)).setAdapter(mMovieAdapter);
-        }
+        List<Movie> movieList = Arrays.asList(results.getMovies());
+        MovieAdapter mMovieAdapter = new MovieAdapter(movieList, this);
+        ((RecyclerView) this.findViewById(R.id.rv_movie_tiles)).setAdapter(mMovieAdapter);
     }
 
     @Override

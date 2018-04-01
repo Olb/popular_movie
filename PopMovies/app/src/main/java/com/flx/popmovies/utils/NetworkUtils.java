@@ -3,6 +3,8 @@ package com.flx.popmovies.utils;
 import android.net.Uri;
 import android.util.Log;
 
+import com.flx.popmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -14,7 +16,9 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    private static final String API_KEY = BuildConfig.API_KEY;
+
+    private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie";
     public static final String IMAGES_BASE_URL = "https://image.tmdb.org/t/p/w185";
 
     private final static String API_KEY_PARAM = "api_key";
@@ -24,14 +28,13 @@ public class NetworkUtils {
      * Returns a URL given the sort params for a list of movies
      *
      * @param sortParam String sort order
-     * @param apiKey String themoviedb.org API key
      * @return URL url built using sortParam
      */
-    public static URL buildMovieListUrl(String sortParam, String apiKey) {
+    public static URL buildMovieListUrl(String sortParam) {
 
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, apiKey)
-                .appendQueryParameter(SORT_PARAM, sortParam)
+                .appendPath(sortParam)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 
         URL url = null;
