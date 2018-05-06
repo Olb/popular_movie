@@ -34,7 +34,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
 
     @Override
-    public void getMovies(String sortOrder, final LoadMoviesCallback callback) {
+    public void getMovies(String sortOrder, final LoadResourceCallback callback) {
         URL url = NetworkUtils.buildMovieListUrl(sortOrder);
 
         String urlAsString = url.toString();
@@ -43,8 +43,8 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                MovieResults movieResults = getMoviesFromJson(response);
-                callback.onMoviesLoaded(movieResults);
+                mMovieResults = getMoviesFromJson(response);
+                callback.onMoviesLoaded(mMovieResults);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -57,7 +57,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void getMovie(long movieId, GetMovieCallback callback) {
+    public void getMovie(long movieId, GetResourceCallback callback) {
         for (Movie movie : mMovieResults.getMovies()) {
             if (movie.getId() == movieId) {
                 callback.onMovieLoaded(movie);
@@ -67,11 +67,20 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         }
     }
 
+    @Override
+    public void getTrailers(long movieId, LoadResourceCallback callback) {
+
+    }
+
+    @Override
+    public void getReviews(long movieId, LoadResourceCallback callback) {
+
+    }
+
     private MovieResults getMoviesFromJson(JSONObject jsonObject) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
-        MovieResults results = gson.fromJson(jsonObject.toString(), MovieResults.class);
 
-        return results;
+        return gson.fromJson(jsonObject.toString(), MovieResults.class);
     }
 }

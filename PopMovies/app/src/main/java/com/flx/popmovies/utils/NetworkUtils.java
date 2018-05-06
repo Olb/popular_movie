@@ -1,7 +1,7 @@
 package com.flx.popmovies.utils;
 
 import android.net.Uri;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import com.flx.popmovies.BuildConfig;
 
@@ -18,8 +18,13 @@ public class NetworkUtils {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
-    private static final String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie";
+    private static final String MOVIE_DB_BASE_URL = "https://api.themoviedb.org/3/movie";
+
     public static final String IMAGES_BASE_URL = "https://image.tmdb.org/t/p/w185";
+
+    private static final String TRAILER_PATH = "videos";
+
+    private static final String REVIEW_PATH = "reviews";
 
     private final static String API_KEY_PARAM = "api_key";
 
@@ -30,20 +35,40 @@ public class NetworkUtils {
      * @return URL url built using sortParam
      */
     public static URL buildMovieListUrl(String sortParam) {
-        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+        Uri builtUri = Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
                 .appendPath(sortParam)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 
+        return getUrlFromUri(builtUri);
+    }
+
+    public static URL buildTrailerListUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendPath(TRAILER_PATH)
+                .build();
+
+        return getUrlFromUri(builtUri);
+    }
+
+    public static URL buildReviewListUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendPath(REVIEW_PATH)
+                .build();
+
+        return getUrlFromUri(builtUri);
+    }
+
+    @Nullable
+    private static URL getUrlFromUri(Uri builtUri) {
         URL url = null;
         try {
             url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-        Log.v(TAG, "Built URI " + url);
-
         return url;
     }
 

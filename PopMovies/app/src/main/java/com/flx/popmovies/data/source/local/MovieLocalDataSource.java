@@ -6,27 +6,34 @@ public class MovieLocalDataSource implements MoviesDataSource {
 
     private static MovieLocalDataSource INSTANCE;
 
-    private MoviesDao mMovieDao;
 
-    public static MovieLocalDataSource getInstance(MoviesDao moviesDao) {
+    public static MovieLocalDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new MovieLocalDataSource(moviesDao);
+            INSTANCE = new MovieLocalDataSource();
         }
 
         return INSTANCE;
     }
 
-    private MovieLocalDataSource(MoviesDao moviesDao) {
-        mMovieDao = moviesDao;
+    private MovieLocalDataSource() {}
+
+    @Override
+    public void getMovies(String sortOrder, LoadResourceCallback callback) {
+
     }
 
     @Override
-    public void getMovies(String sortOrder, LoadMoviesCallback callback) {
+    public void getMovie(long movieId, GetResourceCallback callback) {
 
     }
 
     @Override
-    public void getMovie(long movieId, GetMovieCallback callback) {
+    public void getTrailers(long movieId, LoadResourceCallback callback) {
+
+    }
+
+    @Override
+    public void getReviews(long movieId, LoadResourceCallback callback) {
 
     }
 }

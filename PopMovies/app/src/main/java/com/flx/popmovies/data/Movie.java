@@ -3,18 +3,17 @@ package com.flx.popmovies.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "movies")
-public class Movie implements Parcelable {
+public class Movie {
 
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
+    @SerializedName("id")
     private long mId;
 
     @NonNull
@@ -24,6 +23,7 @@ public class Movie implements Parcelable {
 
     @NonNull
     @ColumnInfo(name = "video")
+    @SerializedName("video")
     private boolean video;
 
     @NonNull
@@ -69,33 +69,6 @@ public class Movie implements Parcelable {
 
     public Movie() { }
 
-    protected Movie(Parcel in) {
-        mId = in.readLong();
-        voteCount = in.readLong();
-        video = in.readByte() != 0;
-        voteAverage = in.readDouble();
-        title = in.readString();
-        popularity = in.readDouble();
-        posterPath = in.readString();
-        originalTitle = in.readString();
-        backdropPath = in.readString();
-        adult = in.readByte() != 0;
-        overview = in.readString();
-        releaseDate = in.readString();
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
     @NonNull
     public long getId() {
         return mId;
@@ -107,8 +80,7 @@ public class Movie implements Parcelable {
 
     public long getVoteCount() { return voteCount; }
     public void setVoteCount(long value) { this.voteCount = value; }
-
-
+    
     public boolean getVideo() { return video; }
     public void setVideo(boolean value) { this.video = value; }
 
@@ -138,28 +110,4 @@ public class Movie implements Parcelable {
 
     public String getReleaseDate() { return releaseDate; }
     public void setReleaseDate(String value) { this.releaseDate = value; }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
-        parcel.writeLong(mId);
-        parcel.writeLong(voteCount);
-        parcel.writeByte((byte) (video ? 1 : 0));
-        parcel.writeDouble(voteAverage);
-        parcel.writeString(title);
-        parcel.writeDouble(popularity);
-        parcel.writeString(posterPath);
-        parcel.writeString(originalTitle);
-        parcel.writeString(backdropPath);
-        parcel.writeByte((byte) (adult ? 1 : 0));
-        parcel.writeString(overview);
-        parcel.writeString(releaseDate);
-    }
-
-
 }

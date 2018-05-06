@@ -1,12 +1,10 @@
 package com.flx.popmovies.data;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
-public class MovieResults implements Parcelable {
+public class MovieResults {
+
     private long page;
     @SerializedName("total_results")
     private long totalResults;
@@ -14,38 +12,6 @@ public class MovieResults implements Parcelable {
     private long totalPages;
     @SerializedName("results")
     private Movie[] movies;
-
-    public static final Creator<MovieResults> CREATOR = new Creator<MovieResults>() {
-        @Override
-        public MovieResults createFromParcel(Parcel in) {
-            return new MovieResults(in);
-        }
-
-        @Override
-        public MovieResults[] newArray(int size) {
-            return new MovieResults[size];
-        }
-    };
-
-    protected MovieResults(Parcel in) {
-        page = in.readLong();
-        totalResults = in.readLong();
-        totalPages = in.readLong();
-        movies = in.createTypedArray(Movie.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(page);
-        parcel.writeLong(totalResults);
-        parcel.writeLong(totalPages);
-        parcel.writeTypedArray(movies, i);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
     public long getPage() { return page; }
     public void setPage(long value) { this.page = value; }

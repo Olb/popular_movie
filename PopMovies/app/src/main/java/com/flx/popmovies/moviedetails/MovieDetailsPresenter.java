@@ -3,11 +3,14 @@ package com.flx.popmovies.moviedetails;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
+import com.flx.popmovies.utils.StringUtil;
 
 public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private final MovieDetailsContract.View mMovieDetailsView;
     private MoviesRepository mMoviesRepository;
+
+    private final String RATING_DENOMINATOR = "/10";
 
     public MovieDetailsPresenter(MoviesRepository moviesRepository, MovieDetailsContract.View movieDetailsView) {
         this.mMovieDetailsView = movieDetailsView;
@@ -33,14 +36,14 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     private void getMovie(long movieId) {
         mMovieDetailsView.setLoadingIndicator(true);
 
-        mMoviesRepository.getMovie(movieId, new MoviesDataSource.GetMovieCallback() {
+        mMoviesRepository.getMovie(movieId, new MoviesDataSource.GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
-                mMovieDetailsView.showRating(String.valueOf(movie.getPopularity()));
-                mMovieDetailsView.showReleaseDate(movie.getReleaseDate());
+                mMovieDetailsView.showRating(StringUtil.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
+                mMovieDetailsView.showReleaseDate(StringUtil.stringToDateReport(movie.getReleaseDate()));
                 mMovieDetailsView.showSynopis(movie.getOverview());
                 mMovieDetailsView.showTitle(movie.getTitle());
-                mMovieDetailsView.showImage();
+                mMovieDetailsView.showImage(StringUtil.getPosterPath(movie.getPosterPath()));
                 mMovieDetailsView.setLoadingIndicator(false);
             }
 
@@ -52,6 +55,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         });
     }
 
+    @Override
     public void start(long movieId) {
         getMovie(movieId);
     }

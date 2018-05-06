@@ -1,5 +1,7 @@
 package com.flx.popmovies.movies;
 
+import android.util.Log;
+
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
@@ -28,11 +30,14 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         mMoviesView.setLoadingIndicator(true);
 
-        mMoviesRepository.getMovies(sortOrder, new MoviesDataSource.LoadMoviesCallback() {
+        mMoviesRepository.getMovies(sortOrder, new MoviesDataSource.LoadResourceCallback() {
             @Override
             public void onMoviesLoaded(MovieResults movieResults) {
                 List<Movie> movieList = Arrays.asList(movieResults.getMovies());
 
+                for (Movie movie : movieList) {
+                    Log.d("MOVIE ID's", movie.getId() + "");
+                }
                 mMoviesView.showMovies(movieList);
                 mMoviesView.setLoadingIndicator(false);
             }

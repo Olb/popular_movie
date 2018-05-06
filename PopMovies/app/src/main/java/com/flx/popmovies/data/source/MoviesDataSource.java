@@ -5,22 +5,26 @@ import com.flx.popmovies.data.Movie;
 
 public interface MoviesDataSource {
 
-    interface LoadMoviesCallback {
+    interface LoadResourceCallback {
 
         void onMoviesLoaded(MovieResults movieResults);
 
         void onDataNotAvailable();
     }
 
-    interface GetMovieCallback {
+    interface GetResourceCallback {
 
         void onMovieLoaded(Movie movie);
 
         void onDataNotAvailable();
     }
 
-    void getMovies(String sortOrder, LoadMoviesCallback callback);
+    void getMovies(String sortOrder, LoadResourceCallback callback);
 
-    void getMovie(long movieId, GetMovieCallback callback);
+    void getMovie(long movieId, GetResourceCallback callback);
+
+    void getTrailers(long movieId, LoadResourceCallback callback);
+
+    void getReviews(long movieId, LoadResourceCallback callback);
 
 }

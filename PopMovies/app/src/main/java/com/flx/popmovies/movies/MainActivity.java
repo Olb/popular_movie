@@ -17,9 +17,7 @@ import android.widget.TextView;
 import com.flx.popmovies.R;
 import com.flx.popmovies.VolleySingleton;
 import com.flx.popmovies.data.source.MoviesDataSource;
-import com.flx.popmovies.data.source.local.MovieDatabase;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
-import com.flx.popmovies.data.source.local.MoviesDao;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.moviedetails.DetailsActivity;
 import com.flx.popmovies.data.Movie;
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private MoviesContract.Presenter mPresenter;
     private MovieAdapter mMovieAdapter;
-    private MoviesRepository mMovieRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +48,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private void prepareMoviesPresenter() {
 
-        MoviesDao moviesDao = MovieDatabase.getInstance(this).moviesDao();
         MoviesDataSource remoteDataSource = MoviesRemoteDataSource.getInstance();
-        MoviesDataSource localDataSource = MovieLocalDataSource.getInstance(moviesDao);
+        MoviesDataSource localDataSource = MovieLocalDataSource.getInstance();
 
         MoviesRepository moviesRepository = MoviesRepository.getInstance(remoteDataSource,
                 localDataSource);

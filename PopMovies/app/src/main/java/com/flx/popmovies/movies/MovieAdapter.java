@@ -78,6 +78,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         @Override
         public void onClick(View view) {
+            Log.d("MOVIE ID", mMovieList.get(getAdapterPosition()).getId() + "");
             mOnClickListener.onListItemClick(mMovieList.get(getAdapterPosition()).getId());
         }
     }

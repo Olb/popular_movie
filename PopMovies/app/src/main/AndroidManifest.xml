@@ -21,6 +21,12 @@
         </activity>
         <activity android:name=".moviedetails.DetailsActivity"
             android:label="@string/movie_detail_label"/>
+
+        <provider
+            android:authorities="com.flx.popmovies"
+            android:name=".data.source.local.MovieContentProvider" />
     </application>
+
+
 
 </manifest>

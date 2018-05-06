@@ -4,39 +4,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flx.popmovies.R;
-import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.source.MoviesDataSource;
+import com.flx.popmovies.data.source.MoviesRepository;
+import com.flx.popmovies.data.source.local.MovieLocalDataSource;
+import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.utils.Constants;
-import com.flx.popmovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.Objects;
 
 public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View {
 
     private static final String TAG = DetailsActivity.class.getSimpleName();
 
+    private MovieDetailsContract.Presenter mPresenter;
+
     private TextView mMovieTitleTextView;
     private ImageView mMoviePosterImageView;
     private TextView mMovieReleaseDateTextView;
     private TextView mMovieRatingTextView;
     private TextView mMovieSynopsisTextView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         mMovieReleaseDateTextView = findViewById(R.id.tv_movie_release_date);
         mMovieRatingTextView = findViewById(R.id.tv_movie_rating);
         mMovieSynopsisTextView = findViewById(R.id.tv_movie_synopsis);
+        mProgressBar = findViewById(R.id.pb_loading_movie_details);
 
         if (!checkConnectivity()) {
             return;
@@ -56,9 +57,22 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         Intent intent = getIntent();
 
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
-            Movie movie = (Movie) intent.getSerializableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
-            setLayoutData(movie);
+           prepareMovieDetailsPresenter(intent.getLongExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT, 0));
+        } else {
+            throw new RuntimeException();
         }
+    }
+
+    private void prepareMovieDetailsPresenter(long movieId) {
+
+        MoviesDataSource remoteDataSource = MoviesRemoteDataSource.getInstance();
+        MoviesDataSource localDataSource = MovieLocalDataSource.getInstance();
+
+        MoviesRepository moviesRepository = MoviesRepository.getInstance(remoteDataSource,
+                localDataSource);
+
+        mPresenter = new MovieDetailsPresenter(moviesRepository, this);
+        mPresenter.start(movieId);
     }
 
     private boolean checkConnectivity() {
@@ -69,37 +83,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         return true;
     }
 
-    private void setLayoutData(Movie movie) {
-        Log.d(TAG, "Movie Title: " + movie.getOriginalTitle());
-        mMovieTitleTextView.setText(movie.getTitle());
-
-        String posterPath = NetworkUtils.IMAGES_BASE_URL + movie.getPosterPath();
-        Picasso.get().load(posterPath).into(mMoviePosterImageView);
-
-        String releaseDateAsString = String.valueOf(stringToDateReport(movie.getReleaseDate()));
-        mMovieReleaseDateTextView.setText(releaseDateAsString);
-
-        String rating = movie.getVoteAverage() + getString(R.string.max_vote_denominator);
-        mMovieRatingTextView.setText(rating);
-
-        mMovieSynopsisTextView.setText(movie.getOverview());
-    }
-
-    private String stringToDateReport(String s){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy", Locale.US);
-        Date date;
-
-        try {
-            date = format.parse(s);
-        } catch (ParseException | java.text.ParseException e) {
-            e.printStackTrace();
-            return "";
-        }
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        return String.valueOf(calendar.get(Calendar.YEAR));
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,22 +105,26 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void setLoadingIndicator(boolean active) {
-
+        if (active) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void showTitle(String title) {
-
+        mMovieTitleTextView.setText(title);
     }
 
     @Override
     public void showSynopis(String synopsis) {
-
+        mMovieSynopsisTextView.setText(synopsis);
     }
 
     @Override
-    public void showImage() {
-
+    public void showImage(String path) {
+        Picasso.get().load(path).into(mMoviePosterImageView);
     }
 
     @Override
@@ -147,12 +134,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showRating(String rating) {
-
+        mMovieRatingTextView.setText(rating);
     }
 
     @Override
     public void showReleaseDate(String releaseDate) {
-
+        mMovieReleaseDateTextView.setText(releaseDate);
     }
 
     @Override

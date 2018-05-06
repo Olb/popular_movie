@@ -1,12 +1,7 @@
 package com.flx.popmovies.data.source;
 
-import android.util.Log;
-
+import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 
 public class MoviesRepository implements MoviesDataSource {
 
@@ -30,9 +25,9 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getMovies(String sortOrder, final LoadMoviesCallback callback) {
+    public void getMovies(String sortOrder, final LoadResourceCallback callback) {
 
-        mMoviesRemoteDataSource.getMovies(sortOrder, new LoadMoviesCallback() {
+        mMoviesRemoteDataSource.getMovies(sortOrder, new LoadResourceCallback() {
             @Override
             public void onMoviesLoaded(MovieResults movieResults) {
                 callback.onMoviesLoaded(movieResults);
@@ -46,16 +41,28 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getMovie(long movieId, GetMovieCallback callback) {
-        //callback()
+    public void getMovie(long movieId, final GetResourceCallback callback) {
+        mMoviesRemoteDataSource.getMovie(movieId, new GetResourceCallback() {
+            @Override
+            public void onMovieLoaded(Movie movie) {
+                callback.onMovieLoaded(movie);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
+    @Override
+    public void getTrailers(long movieId, LoadResourceCallback callback) {
 
-    private MovieResults getMoviesFromJson(JSONObject jsonObject) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-        MovieResults results = gson.fromJson(jsonObject.toString(), MovieResults.class);
-        Log.d("GSON Pretty Print", gson.toJson(jsonObject).toString());
-        return results;
     }
+
+    @Override
+    public void getReviews(long movieId, LoadResourceCallback callback) {
+
+    }
+
 }

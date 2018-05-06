@@ -12,7 +12,7 @@ public interface MovieDetailsContract {
 
         void showSynopis(String synopsis);
 
-        void showImage();
+        void showImage(String path);
 
         void setFavoritesMarked(boolean isFavorite);
 
@@ -30,5 +30,7 @@ public interface MovieDetailsContract {
         void playTrailer(int movieId);
 
         void readReviews(int movieId);
+
+        void start(long movieId);
     }
 }
