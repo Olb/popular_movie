@@ -55,8 +55,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
         Intent intent = getIntent();
 
-        if (intent.hasExtra(Constants.COM_POPMOVIE_DETAILS_INTENT)) {
-            Movie movie = (Movie) intent.getSerializableExtra(Constants.COM_POPMOVIE_DETAILS_INTENT);
+        if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
+            Movie movie = (Movie) intent.getSerializableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
             setLayoutData(movie);
         }
     }
@@ -152,6 +152,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showReleaseDate(String releaseDate) {
+
+    }
+
+    @Override
+    public void showMovieNotAvailable() {
 
     }
 

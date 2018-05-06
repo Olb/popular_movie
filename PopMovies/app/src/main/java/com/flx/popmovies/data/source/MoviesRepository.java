@@ -47,7 +47,7 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getMovie(String movieId, GetMovieCallback callback) {
+    public void getMovie(long movieId, GetMovieCallback callback) {
         //callback()
     }
 

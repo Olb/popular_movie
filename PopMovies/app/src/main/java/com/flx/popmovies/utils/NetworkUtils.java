@@ -22,7 +22,6 @@ public class NetworkUtils {
     public static final String IMAGES_BASE_URL = "https://image.tmdb.org/t/p/w185";
 
     private final static String API_KEY_PARAM = "api_key";
-    private final static String SORT_PARAM = "sort_by";
 
     /**
      * Returns a URL given the sort params for a list of movies
@@ -31,7 +30,6 @@ public class NetworkUtils {
      * @return URL url built using sortParam
      */
     public static URL buildMovieListUrl(String sortParam) {
-        String tempSortParam = "popular";
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendPath(sortParam)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)

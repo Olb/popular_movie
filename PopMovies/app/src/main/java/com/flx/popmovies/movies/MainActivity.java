@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     @Override
     public void showMovieDetail(long movieId) {
         Intent startDetailsActivityIntent = new Intent(MainActivity.this, DetailsActivity.class);
-        startDetailsActivityIntent.putExtra(Constants.COM_POPMOVIE_DETAILS_INTENT, movieId);
+        startDetailsActivityIntent.putExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT, movieId);
 
         startActivity(startDetailsActivityIntent);
     }
