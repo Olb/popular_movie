@@ -18,7 +18,6 @@ public class MoviesRepository implements MoviesDataSource {
     private MoviesRepository(MoviesDataSource moviesRemoteDataSource, MoviesDataSource moviesLocaDataSource) {
         mMoviesRemoteDataSource = moviesRemoteDataSource;
         mMoviesLocaDataSource = moviesLocaDataSource;
-
     }
 
     public static MoviesRepository getInstance(MoviesDataSource moviesRemoteDataSource, MoviesDataSource moviesLocaDataSource) {
