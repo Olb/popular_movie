@@ -31,7 +31,7 @@ public class NetworkUtils {
      * @return URL url built using sortParam
      */
     public static URL buildMovieListUrl(String sortParam) {
-
+        String tempSortParam = "popular";
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendPath(sortParam)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
