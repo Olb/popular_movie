@@ -12,6 +12,8 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private final String RATING_DENOMINATOR = "/10";
 
+    private long mCurrentMovieId;
+
     public MovieDetailsPresenter(MoviesRepository moviesRepository, MovieDetailsContract.View movieDetailsView) {
         this.mMovieDetailsView = movieDetailsView;
         this.mMoviesRepository = moviesRepository;
@@ -19,8 +21,16 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
-    public void markFavorite(int movieId) {
+    public void markFavorite() {
 
+        // TODO: Add methods to MoviesDataSource to save
+        // this movie id.
+        // 1) Need to retrieve the movie from id
+        // 2) Add save method to data source
+        // 3) Save method
+        // 4) Call SaveResourceCallback if success
+        // 4) Error if not
+        mMoviesRepository.setMovie(mCurrentMovieId, new MoviesDataSource.SaveResourceDataSource);
     }
 
     @Override
@@ -39,6 +49,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMoviesRepository.getMovie(movieId, new MoviesDataSource.GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
+                mCurrentMovieId = movie.getId();
                 mMovieDetailsView.showRating(StringUtil.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
                 mMovieDetailsView.showReleaseDate(StringUtil.stringToDateReport(movie.getReleaseDate()));
                 mMovieDetailsView.showSynopis(movie.getOverview());

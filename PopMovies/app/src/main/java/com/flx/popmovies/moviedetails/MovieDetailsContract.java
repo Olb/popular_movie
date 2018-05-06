@@ -25,7 +25,7 @@ public interface MovieDetailsContract {
     }
 
     interface Presenter extends BasePresenter {
-        void markFavorite(int movieId);
+        void markFavorite();
 
         void playTrailer(int movieId);
 

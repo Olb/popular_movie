@@ -91,6 +91,12 @@
                 android:layout_height="1dp"
                 android:layout_margin="12dp"
                 android:background="@color/colorLineViewBackground" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark as favorite"
+                android:onClick="favoritePressed"/>
         </LinearLayout>
     </ScrollView>
 

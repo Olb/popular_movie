@@ -151,4 +151,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     public void setPresenter(MovieDetailsContract.Presenter presenter) {
 
     }
+
+    public void favoritePressed(View view) {
+        mPresenter.markFavorite();
+    }
 }
