@@ -1,7 +1,10 @@
 package com.flx.popmovies.moviedetails;
 
+import android.graphics.Bitmap;
+
 import com.flx.popmovies.BasePresenter;
 import com.flx.popmovies.BaseView;
+import com.flx.popmovies.data.Movie;
 
 public interface MovieDetailsContract {
 
@@ -22,6 +25,10 @@ public interface MovieDetailsContract {
 
         void showMovieNotAvailable();
 
+        void tempShowMovie(Movie movie);
+
+        Bitmap getPosterImage();
+
     }
 
     interface Presenter extends BasePresenter {
@@ -32,5 +39,7 @@ public interface MovieDetailsContract {
         void readReviews(int movieId);
 
         void start(long movieId);
+
+        void getMovie();
     }
 }

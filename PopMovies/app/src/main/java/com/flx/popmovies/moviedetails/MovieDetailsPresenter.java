@@ -1,5 +1,8 @@
 package com.flx.popmovies.moviedetails;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
@@ -12,7 +15,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private final String RATING_DENOMINATOR = "/10";
 
-    private long mCurrentMovieId;
+    private Movie mCurrentMovie;
 
     public MovieDetailsPresenter(MoviesRepository moviesRepository, MovieDetailsContract.View movieDetailsView) {
         this.mMovieDetailsView = movieDetailsView;
@@ -23,17 +26,34 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void markFavorite() {
 
-        // TODO: Add methods to MoviesDataSource to save
-        // this movie id.
-        // 1) Need to retrieve the movie from id
-        // 2) Add save method to data source
-        // 3) Save method
-        // 4) Call SaveResourceCallback if success
-        // 4) Error if not
-        mMoviesRepository.setMovie(mCurrentMovieId, new MoviesDataSource.SaveResourceDataSource);
+        mMoviesRepository.saveMovie(mCurrentMovie, new MoviesDataSource.SaveResourceCallback() {
+            @Override
+            public void onResourceSaved() {
+                mMovieDetailsView.setFavoritesMarked(true);
+            }
+
+            @Override
+            public void onSaveFailed() {
+                throw new UnsupportedOperationException("Couldn't save");
+            }
+        });
+
+        Bitmap posterImageBitmap = mMovieDetailsView.getPosterImage();
+        mMoviesRepository.savePosterImage(mCurrentMovie.getPosterPath(), posterImageBitmap, new MoviesDataSource.SaveResourceCallback() {
+            @Override
+            public void onResourceSaved() {
+                Log.d("Image Saved", "Image saved.");
+            }
+
+            @Override
+            public void onSaveFailed() {
+                Log.d("Image NOT Saved", "Image failed saved.");
+
+            }
+        });
     }
 
-    @Override
+        @Override
     public void playTrailer(int movieId) {
 
     }
@@ -49,7 +69,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMoviesRepository.getMovie(movieId, new MoviesDataSource.GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
-                mCurrentMovieId = movie.getId();
+                mCurrentMovie = movie;
                 mMovieDetailsView.showRating(StringUtil.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
                 mMovieDetailsView.showReleaseDate(StringUtil.stringToDateReport(movie.getReleaseDate()));
                 mMovieDetailsView.showSynopis(movie.getOverview());
@@ -69,6 +89,21 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void start(long movieId) {
         getMovie(movieId);
+    }
+
+    @Override
+    public void getMovie() {
+            mMoviesRepository.getMovie(mCurrentMovie.getId(), new MoviesDataSource.GetResourceCallback() {
+                @Override
+                public void onMovieLoaded(Movie movie) {
+                    mMovieDetailsView.tempShowMovie(movie);
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    Log.d("Unable to get movie", "Failed tro retreive from db");
+                }
+            });
     }
 
     @Override

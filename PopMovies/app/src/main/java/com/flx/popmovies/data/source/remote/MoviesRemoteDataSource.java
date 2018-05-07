@@ -1,5 +1,7 @@
 package com.flx.popmovies.data.source.remote;
 
+import android.graphics.Bitmap;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -68,12 +70,27 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     }
 
     @Override
+    public void getSavedMovie(long movieId, GetResourceCallback callback) {
+
+    }
+
+    @Override
     public void getTrailers(long movieId, LoadResourceCallback callback) {
 
     }
 
     @Override
     public void getReviews(long movieId, LoadResourceCallback callback) {
+
+    }
+
+    @Override
+    public void saveMovie(Movie movie, SaveResourceCallback callback) {
+
+    }
+
+    @Override
+    public void savePosterImage(String path, Bitmap posterImage, SaveResourceCallback callback) {
 
     }
 

@@ -1,11 +1,15 @@
 package com.flx.popmovies.moviedetails;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,13 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flx.popmovies.R;
+import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.utils.Constants;
+import com.flx.popmovies.utils.ContextRetriever;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.Objects;
 
 public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View {
@@ -38,6 +45,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private TextView mMovieSynopsisTextView;
     private ProgressBar mProgressBar;
 
+    private ImageView mImageTemp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         mMovieRatingTextView = findViewById(R.id.tv_movie_rating);
         mMovieSynopsisTextView = findViewById(R.id.tv_movie_synopsis);
         mProgressBar = findViewById(R.id.pb_loading_movie_details);
+
+        mImageTemp = findViewById(R.id.iv_temp);
 
         if (!checkConnectivity()) {
             return;
@@ -129,7 +140,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void setFavoritesMarked(boolean isFavorite) {
-
+        Toast.makeText(this, "Save movie!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -148,11 +159,33 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
-    public void setPresenter(MovieDetailsContract.Presenter presenter) {
+    public void tempShowMovie(Movie movie) {
+        Toast.makeText(this, "Movie retrieved!. Title: " + movie.getTitle(), Toast.LENGTH_LONG).show();
 
+        ContextWrapper cw = new ContextWrapper(ContextRetriever.getInstance(null).getContext());
+
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+        File imagePath = new File(directory.getAbsolutePath(),movie.getPosterPath());
+        Log.d("IMAGE PATH", imagePath.getAbsolutePath());
+        Picasso.get().load(imagePath).into(mImageTemp);
+    }
+
+    @Override
+    public Bitmap getPosterImage() {
+        return ((BitmapDrawable)mMoviePosterImageView.getDrawable()).getBitmap();
+    }
+
+    @Override
+    public void setPresenter(MovieDetailsContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     public void favoritePressed(View view) {
         mPresenter.markFavorite();
+    }
+
+    public void tempRecall(View view) {
+        mPresenter.getMovie();
     }
 }

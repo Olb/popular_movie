@@ -23,6 +23,7 @@ import com.flx.popmovies.moviedetails.DetailsActivity;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.utils.Constants;
+import com.flx.popmovies.utils.ContextRetriever;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         prepareMoviesRecyclerView();
 
         prepareMoviesPresenter();
+
+        ContextRetriever.getInstance(this);
     }
 
     private void prepareMoviesPresenter() {
