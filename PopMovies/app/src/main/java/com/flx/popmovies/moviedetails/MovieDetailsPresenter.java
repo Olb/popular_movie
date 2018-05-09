@@ -4,9 +4,12 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
-import com.flx.popmovies.utils.StringUtil;
+import com.flx.popmovies.util.MoviesUtils;
+
+import java.util.Arrays;
 
 public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
@@ -14,6 +17,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     private MoviesRepository mMoviesRepository;
 
     private final String RATING_DENOMINATOR = "/10";
+    private final int FAVORITE = 1;
 
     private Movie mCurrentMovie;
 
@@ -26,7 +30,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void markFavorite() {
 
-        mMoviesRepository.saveMovie(mCurrentMovie, new MoviesDataSource.SaveResourceCallback() {
+        mMoviesRepository.saveMovie(mCurrentMovie, FAVORITE, new MoviesDataSource.SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
                 mMovieDetailsView.setFavoritesMarked(true);
@@ -53,57 +57,89 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         });
     }
 
-        @Override
-    public void playTrailer(int movieId) {
-
-    }
-
     @Override
-    public void readReviews(int movieId) {
-
-    }
-
-    private void getMovie(long movieId) {
-        mMovieDetailsView.setLoadingIndicator(true);
-
-        mMoviesRepository.getMovie(movieId, new MoviesDataSource.GetResourceCallback() {
+    public void removeFavorite() {
+        mMoviesRepository.removeFavorite(mCurrentMovie.getId(), new MoviesDataSource.DeleteResourceCallback() {
             @Override
-            public void onMovieLoaded(Movie movie) {
-                mCurrentMovie = movie;
-                mMovieDetailsView.showRating(StringUtil.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
-                mMovieDetailsView.showReleaseDate(StringUtil.stringToDateReport(movie.getReleaseDate()));
-                mMovieDetailsView.showSynopis(movie.getOverview());
-                mMovieDetailsView.showTitle(movie.getTitle());
-                mMovieDetailsView.showImage(StringUtil.getPosterPath(movie.getPosterPath()));
-                mMovieDetailsView.setLoadingIndicator(false);
+            public void onResourceDeleted() {
+                mMovieDetailsView.setFavoritesMarked(false);
             }
 
             @Override
-            public void onDataNotAvailable() {
-                mMovieDetailsView.showMovieNotAvailable();
-                mMovieDetailsView.setLoadingIndicator(false);
+            public void onDeleteFailed() {
+
+                // TODO: Show delete on success or not
+                Log.d("DeleteFail", "Deletion Failed");
             }
         });
     }
 
     @Override
-    public void start(long movieId) {
-        getMovie(movieId);
+    public void playTrailer(long movieId) {
+
+
     }
 
     @Override
-    public void getMovie() {
-            mMoviesRepository.getMovie(mCurrentMovie.getId(), new MoviesDataSource.GetResourceCallback() {
-                @Override
-                public void onMovieLoaded(Movie movie) {
-                    mMovieDetailsView.tempShowMovie(movie);
-                }
+    public void getTrailers(long movieId) {
+        Log.d("TrailersPresenter", "Getting trailers.");
 
-                @Override
-                public void onDataNotAvailable() {
-                    Log.d("Unable to get movie", "Failed tro retreive from db");
-                }
-            });
+        mMoviesRepository.getTrailers(movieId, new MoviesDataSource.LoadTrailersResourceCallback() {
+            @Override
+            public void onTrailersLoaded(TrailerResults trailerResults) {
+                Log.d("TrailersPresenter", "Call back");
+                mMovieDetailsView.showTrailers(Arrays.asList(trailerResults.getResults()));
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                Log.d("Oops", "No Trailers");
+            }
+        });
+    }
+
+    @Override
+    public void readReviews(long movieId) {
+
+    }
+
+    private void loadMovie(final Movie movie) {
+        Log.d("TrailersPresenter", "Getting movis.");
+
+        mMovieDetailsView.setLoadingIndicator(true);
+        mMoviesRepository.getMovie(movie.getId(), new MoviesDataSource.GetResourceCallback() {
+            @Override
+            public void onMovieLoaded(Movie movie) {
+                setMovieUI(movie);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                setMovieUI(movie);
+            }
+        });
+        getTrailers(movie.getId());
+    }
+
+    private void setMovieUI(Movie movie) {
+        mCurrentMovie = movie;
+        mMovieDetailsView.showRating(MoviesUtils.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
+        mMovieDetailsView.showReleaseDate(MoviesUtils.stringToDateReport(movie.getReleaseDate()));
+        mMovieDetailsView.showSynopsis(movie.getOverview());
+        mMovieDetailsView.showTitle(movie.getTitle());
+        mMovieDetailsView.showImage(MoviesUtils.getPosterPath(movie.getPosterPath()));
+        if (movie.getIsFavorite() != 0) {
+            mMovieDetailsView.setFavoritesMarked(true);
+        } else {
+            mMovieDetailsView.setFavoritesMarked(false);
+        }
+
+        mMovieDetailsView.setLoadingIndicator(false);
+    }
+
+    @Override
+    public void start(Movie movie) {
+        loadMovie(movie);
     }
 
     @Override

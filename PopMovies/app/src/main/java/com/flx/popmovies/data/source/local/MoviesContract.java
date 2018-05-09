@@ -31,5 +31,8 @@ public final class MoviesContract {
         public static final String COLUMN_SYNOPSIS = "synopsis";
 
         public static final String COLUMN_POSTER_PATH = "image";
+
+        public static final String COLUMN_IS_FAVORITE = "favorite";
+
     }
 }

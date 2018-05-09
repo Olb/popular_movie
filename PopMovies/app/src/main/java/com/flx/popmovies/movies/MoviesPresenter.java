@@ -1,7 +1,5 @@
 package com.flx.popmovies.movies;
 
-import android.util.Log;
-
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
@@ -16,28 +14,23 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private MoviesRepository mMoviesRepository;
 
     private static final String SORT_POPULARITY = "popular";
-    private static final String SORT_TOP_RATED = "top_rated";
 
-    private String mCurrentSortOrder;
+    private List<Movie> movieList;
 
-    public MoviesPresenter(MoviesRepository mMoviesRepository, MoviesContract.View mMoviesView) {
+    MoviesPresenter(MoviesRepository mMoviesRepository, MoviesContract.View mMoviesView) {
         this.mMoviesView = mMoviesView;
         this.mMoviesRepository = mMoviesRepository;
         mMoviesView.setPresenter(this);
     }
 
-    private void loadMovies(String sortOrder) {
+    private void loadMovies(final String sortOrder) {
 
         mMoviesView.setLoadingIndicator(true);
 
-        mMoviesRepository.getMovies(sortOrder, new MoviesDataSource.LoadResourceCallback() {
+        mMoviesRepository.getMovies(sortOrder, new MoviesDataSource.LoadMoviesResourceCallback() {
             @Override
             public void onMoviesLoaded(MovieResults movieResults) {
-                List<Movie> movieList = Arrays.asList(movieResults.getMovies());
-
-                for (Movie movie : movieList) {
-                    Log.d("MOVIE ID's", movie.getId() + "");
-                }
+                movieList = Arrays.asList(movieResults.getMovies());
                 mMoviesView.showMovies(movieList);
                 mMoviesView.setLoadingIndicator(false);
             }
@@ -52,23 +45,44 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void start() {
-        mCurrentSortOrder = SORT_POPULARITY;
-        loadMovies(mCurrentSortOrder);
+        loadMovies(SORT_POPULARITY);
     }
 
     @Override
-    public void sortOrderChanged() {
-        if (mCurrentSortOrder.equals(SORT_POPULARITY)) {
-            mCurrentSortOrder = SORT_TOP_RATED;
-        } else {
-            mCurrentSortOrder = SORT_POPULARITY;
-        }
-
-        loadMovies(mCurrentSortOrder);
+    public void sortOrderChanged(String sortBy) {
+        loadMovies(sortBy);
     }
 
     @Override
     public void movieSelected(long movieId) {
-        mMoviesView.showMovieDetail(movieId);
+        for (Movie movie : movieList) {
+            if (movie.getId() == movieId) {
+                mMoviesView.showMovieDetail(movie);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void showFavorites() {
+        mMoviesRepository.getFavorites(new MoviesDataSource.LoadMoviesResourceCallback() {
+            @Override
+            public void onMoviesLoaded(MovieResults movieResults) {
+                movieList = Arrays.asList(movieResults.getMovies());
+                mMoviesView.showMovies(movieList);
+                mMoviesView.setLoadingIndicator(false);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                mMoviesView.showError();
+                mMoviesView.setLoadingIndicator(false);
+            }
+        });
+    }
+
+    @Override
+    public void setOffline() {
+        mMoviesView.showError();
     }
 }

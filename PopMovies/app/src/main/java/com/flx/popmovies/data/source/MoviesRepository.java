@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
+import com.flx.popmovies.data.TrailerResults;
 
 public class MoviesRepository implements MoviesDataSource {
 
@@ -27,9 +28,9 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getMovies(String sortOrder, final LoadResourceCallback callback) {
+    public void getMovies(String sortOrder, final LoadMoviesResourceCallback callback) {
 
-        mMoviesRemoteDataSource.getMovies(sortOrder, new LoadResourceCallback() {
+        mMoviesRemoteDataSource.getMovies(sortOrder, new LoadMoviesResourceCallback() {
             @Override
             public void onMoviesLoaded(MovieResults movieResults) {
                 callback.onMoviesLoaded(movieResults);
@@ -43,8 +44,38 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getMovie(long movieId, final GetResourceCallback callback) {
-        mMoviesRemoteDataSource.getMovie(movieId, new GetResourceCallback() {
+    public void getFavorites(final LoadMoviesResourceCallback callback) {
+        mMoviesLocalDataSource.getFavorites(new LoadMoviesResourceCallback() {
+            @Override
+            public void onMoviesLoaded(MovieResults movieResults) {
+                callback.onMoviesLoaded(movieResults);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
+    public void removeFavorite(long movieId, final DeleteResourceCallback callback) {
+        mMoviesLocalDataSource.removeFavorite(movieId, new DeleteResourceCallback() {
+            @Override
+            public void onResourceDeleted() {
+                callback.onResourceDeleted();
+            }
+
+            @Override
+            public void onDeleteFailed() {
+                callback.onDeleteFailed();
+            }
+        });
+    }
+
+    @Override
+    public void getMovie(final long movieId, final GetResourceCallback callback) {
+        mMoviesLocalDataSource.getSavedMovie(movieId, new GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
                 callback.onMovieLoaded(movie);
@@ -55,6 +86,7 @@ public class MoviesRepository implements MoviesDataSource {
                 callback.onDataNotAvailable();
             }
         });
+
     }
 
     @Override
@@ -73,18 +105,28 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getTrailers(long movieId, LoadResourceCallback callback) {
+    public void getTrailers(long movieId, final LoadTrailersResourceCallback callback) {
+        mMoviesRemoteDataSource.getTrailers(movieId, new LoadTrailersResourceCallback() {
+            @Override
+            public void onTrailersLoaded(TrailerResults trailerResults) {
+                callback.onTrailersLoaded(trailerResults);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
+    public void getReviews(long movieId, LoadMoviesResourceCallback callback) {
 
     }
 
     @Override
-    public void getReviews(long movieId, LoadResourceCallback callback) {
-
-    }
-
-    @Override
-    public void saveMovie(Movie movie,  final SaveResourceCallback callback) {
-        mMoviesLocalDataSource.saveMovie(movie, new SaveResourceCallback() {
+    public void saveMovie(Movie movie, int isFavorite, final SaveResourceCallback callback) {
+        mMoviesLocalDataSource.saveMovie(movie, isFavorite, new SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
                 callback.onResourceSaved();
@@ -94,7 +136,7 @@ public class MoviesRepository implements MoviesDataSource {
             public void onSaveFailed() {
                 callback.onSaveFailed();
             }
-        });
+        } );
     }
 
     @Override

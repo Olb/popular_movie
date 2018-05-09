@@ -1,7 +1,6 @@
 package com.flx.popmovies.moviedetails;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,11 +8,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,18 +22,18 @@ import android.widget.Toast;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.Trailer;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
-import com.flx.popmovies.utils.Constants;
-import com.flx.popmovies.utils.ContextRetriever;
+import com.flx.popmovies.util.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
-public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View {
+public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener {
 
     private static final String TAG = DetailsActivity.class.getSimpleName();
 
@@ -44,8 +45,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private TextView mMovieRatingTextView;
     private TextView mMovieSynopsisTextView;
     private ProgressBar mProgressBar;
+    private Button mFavoritesButton;
 
-    private ImageView mImageTemp;
+    private TrailersAdapter mTrailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         mMovieRatingTextView = findViewById(R.id.tv_movie_rating);
         mMovieSynopsisTextView = findViewById(R.id.tv_movie_synopsis);
         mProgressBar = findViewById(R.id.pb_loading_movie_details);
-
-        mImageTemp = findViewById(R.id.iv_temp);
+        mFavoritesButton = findViewById(R.id.bt_favorites_button);
 
         if (!checkConnectivity()) {
             return;
@@ -68,13 +69,26 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         Intent intent = getIntent();
 
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
-           prepareMovieDetailsPresenter(intent.getLongExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT, 0));
+            Movie movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
+            setupTrailerAdapter();
+            prepareMovieDetailsPresenter(movie);
         } else {
             throw new RuntimeException();
         }
     }
 
-    private void prepareMovieDetailsPresenter(long movieId) {
+    private void setupTrailerAdapter() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mTrailerAdapter = new TrailersAdapter(this);
+
+        RecyclerView mMovieRecyclerView = findViewById(R.id.rv_trailers);
+        mMovieRecyclerView.setLayoutManager(layoutManager);
+        mMovieRecyclerView.setHasFixedSize(true);
+        mMovieRecyclerView.setAdapter(mTrailerAdapter);
+    }
+
+    private void prepareMovieDetailsPresenter(Movie movie) {
 
         MoviesDataSource remoteDataSource = MoviesRemoteDataSource.getInstance();
         MoviesDataSource localDataSource = MovieLocalDataSource.getInstance();
@@ -83,7 +97,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
                 localDataSource);
 
         mPresenter = new MovieDetailsPresenter(moviesRepository, this);
-        mPresenter.start(movieId);
+        mPresenter.start(movie);
     }
 
     private boolean checkConnectivity() {
@@ -129,7 +143,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
-    public void showSynopis(String synopsis) {
+    public void showSynopsis(String synopsis) {
         mMovieSynopsisTextView.setText(synopsis);
     }
 
@@ -140,7 +154,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void setFavoritesMarked(boolean isFavorite) {
-        Toast.makeText(this, "Save movie!", Toast.LENGTH_LONG).show();
+        if (isFavorite) {
+            mFavoritesButton.setText(getResources().getText(R.string.unmark_as_favorite));
+        } else {
+            mFavoritesButton.setText(getResources().getText(R.string.mark_as_favorite));
+        }
     }
 
     @Override
@@ -154,26 +172,13 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
-    public void showMovieNotAvailable() {
-
-    }
-
-    @Override
-    public void tempShowMovie(Movie movie) {
-        Toast.makeText(this, "Movie retrieved!. Title: " + movie.getTitle(), Toast.LENGTH_LONG).show();
-
-        ContextWrapper cw = new ContextWrapper(ContextRetriever.getInstance(null).getContext());
-
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-        File imagePath = new File(directory.getAbsolutePath(),movie.getPosterPath());
-        Log.d("IMAGE PATH", imagePath.getAbsolutePath());
-        Picasso.get().load(imagePath).into(mImageTemp);
-    }
-
-    @Override
     public Bitmap getPosterImage() {
         return ((BitmapDrawable)mMoviePosterImageView.getDrawable()).getBitmap();
+    }
+
+    @Override
+    public void showTrailers(List<Trailer> trailers) {
+        mTrailerAdapter.setNewData(trailers);
     }
 
     @Override
@@ -182,10 +187,16 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     public void favoritePressed(View view) {
-        mPresenter.markFavorite();
+        String favoriteButtonTitle = mFavoritesButton.getText().toString();
+        if (favoriteButtonTitle.equals(getResources().getString(R.string.mark_as_favorite))) {
+            mPresenter.markFavorite();
+        } else {
+            mPresenter.removeFavorite();
+        }
     }
 
-    public void tempRecall(View view) {
-        mPresenter.getMovie();
+    @Override
+    public void onListItemClick(long movieId) {
+
     }
 }

@@ -16,14 +16,14 @@ import android.widget.TextView;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.VolleySingleton;
+import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesDataSource;
+import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.moviedetails.DetailsActivity;
-import com.flx.popmovies.data.Movie;
-import com.flx.popmovies.data.source.MoviesRepository;
-import com.flx.popmovies.utils.Constants;
-import com.flx.popmovies.utils.ContextRetriever;
+import com.flx.popmovies.util.Constants;
+import com.flx.popmovies.util.ContextSingleton;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,9 +31,12 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener, MoviesContract.View {
 
     private static final int GRID_SPAN_COUNT = 2;
+    private static final String SORT_POPULARITY = "popular";
+    private static final String SORT_TOP_RATED = "top_rated";
 
     private MoviesContract.Presenter mPresenter;
     private MovieAdapter mMovieAdapter;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +44,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         setContentView(R.layout.activity_main);
 
         VolleySingleton.getInstance(this);
-
-        prepareMoviesRecyclerView();
+        ContextSingleton.getInstance(this);
 
         prepareMoviesPresenter();
 
-        ContextRetriever.getInstance(this);
+        prepareMoviesRecyclerView();
+
     }
 
     private void prepareMoviesPresenter() {
@@ -58,13 +61,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                 localDataSource);
 
         mPresenter = new MoviesPresenter(moviesRepository, this);
+
         mPresenter.start();
     }
 
     private void prepareMoviesRecyclerView() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
 
-        mMovieAdapter = new MovieAdapter( this);
+        mMovieAdapter = new MovieAdapter(this);
 
         RecyclerView mMovieRecyclerView = findViewById(R.id.rv_movie_tiles);
         mMovieRecyclerView.setLayoutManager(layoutManager);
@@ -81,14 +85,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        mMenu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.action_change_sort) {
-            mPresenter.sortOrderChanged();
+        switch (item.getItemId()) {
+            case R.id.action_change_sort:
+                if (item.getTitle().toString().equals(getString(R.string.menu_top_rated_sort))) {
+                    item.setTitle(R.string.menu_popular_sort);
+                    mPresenter.sortOrderChanged(SORT_TOP_RATED);
+                } else {
+                    item.setTitle(R.string.menu_top_rated_sort);
+                    mPresenter.sortOrderChanged(SORT_POPULARITY);
+                }
+                break;
+            case R.id.action_favorites:
+                mPresenter.showFavorites();
+                break;
         }
 
         return true;
@@ -116,11 +132,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     @Override
-    public void showMovieDetail(long movieId) {
+    public void showMovieDetail(Movie movie) {
         Intent startDetailsActivityIntent = new Intent(MainActivity.this, DetailsActivity.class);
-        startDetailsActivityIntent.putExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT, movieId);
+        startDetailsActivityIntent.putExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT, movie);
 
         startActivity(startDetailsActivityIntent);
+    }
+
+    @Override
+    public void menuBarTitle(String title) {
+        getMenuInflater();
     }
 
     @Override

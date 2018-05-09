@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import com.flx.popmovies.BasePresenter;
 import com.flx.popmovies.BaseView;
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.Trailer;
+
+import java.util.List;
 
 public interface MovieDetailsContract {
 
@@ -13,7 +16,7 @@ public interface MovieDetailsContract {
 
         void showTitle(String title);
 
-        void showSynopis(String synopsis);
+        void showSynopsis(String synopsis);
 
         void showImage(String path);
 
@@ -23,23 +26,23 @@ public interface MovieDetailsContract {
 
         void showReleaseDate(String releaseDate);
 
-        void showMovieNotAvailable();
-
-        void tempShowMovie(Movie movie);
-
         Bitmap getPosterImage();
+
+        void showTrailers(List<Trailer> trailers);
 
     }
 
     interface Presenter extends BasePresenter {
         void markFavorite();
 
-        void playTrailer(int movieId);
+        void removeFavorite();
 
-        void readReviews(int movieId);
+        void playTrailer(long movieId);
 
-        void start(long movieId);
+        void getTrailers(long movieId);
 
-        void getMovie();
+        void readReviews(long movieId);
+
+        void start(Movie movie);
     }
 }

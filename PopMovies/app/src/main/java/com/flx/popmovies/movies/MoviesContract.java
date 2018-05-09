@@ -16,15 +16,21 @@ public interface MoviesContract {
 
         void showError();
 
-        void showMovieDetail(long movieId);
+        void showMovieDetail(Movie movie);
+
+        void menuBarTitle(String title);
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void sortOrderChanged();
+        void sortOrderChanged(String sortBy);
 
         void movieSelected(long movieId);
+
+        void showFavorites();
+
+        void setOffline();
 
     }
 }

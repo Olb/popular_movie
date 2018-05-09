@@ -8,4 +8,10 @@
         android:title="@string/menu_top_rated_sort"
         app:showAsAction="collapseActionView" />
 
+    <item
+        android:id="@+id/action_favorites"
+        android:orderInCategory="2"
+        android:title="@string/menu_favorites"
+        app:showAsAction="collapseActionView" />
+
 </menu>

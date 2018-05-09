@@ -9,8 +9,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.flx.popmovies.VolleySingleton;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
+import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
-import com.flx.popmovies.utils.NetworkUtils;
+import com.flx.popmovies.util.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -36,11 +37,11 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
 
     @Override
-    public void getMovies(String sortOrder, final LoadResourceCallback callback) {
+    public void getMovies(final String sortOrder, final LoadMoviesResourceCallback callback) {
+
         URL url = NetworkUtils.buildMovieListUrl(sortOrder);
 
         String urlAsString = url.toString();
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -56,6 +57,18 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         });
 
         VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+
+
+    }
+
+    @Override
+    public void getFavorites(LoadMoviesResourceCallback callback) {
+        throw new UnsupportedOperationException("Remote resource cannot load from db");
+    }
+
+    @Override
+    public void removeFavorite(long movieId, DeleteResourceCallback callback) {
+
     }
 
     @Override
@@ -71,27 +84,43 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     @Override
     public void getSavedMovie(long movieId, GetResourceCallback callback) {
+        throw new UnsupportedOperationException("Remote resource cannot load from db");
+    }
+
+    @Override
+    public void getTrailers(long movieId, final LoadTrailersResourceCallback callback) {
+        URL url = NetworkUtils.buildTrailerListUrl(String.valueOf(movieId));
+
+        String urlAsString = url.toString();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onTrailersLoaded(getTrailersFromJson(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onDataNotAvailable();
+            }
+        });
+
+        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+    }
+
+    @Override
+    public void getReviews(long movieId, LoadMoviesResourceCallback callback) {
 
     }
 
     @Override
-    public void getTrailers(long movieId, LoadResourceCallback callback) {
-
-    }
-
-    @Override
-    public void getReviews(long movieId, LoadResourceCallback callback) {
-
-    }
-
-    @Override
-    public void saveMovie(Movie movie, SaveResourceCallback callback) {
-
+    public void saveMovie(Movie movie, int isFavorite, SaveResourceCallback callback) {
+        throw new UnsupportedOperationException("Remote resource cannot load from db");
     }
 
     @Override
     public void savePosterImage(String path, Bitmap posterImage, SaveResourceCallback callback) {
-
+        throw new UnsupportedOperationException("Remote resource cannot load from db");
     }
 
     private MovieResults getMoviesFromJson(JSONObject jsonObject) {
@@ -99,5 +128,12 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         return gson.fromJson(jsonObject.toString(), MovieResults.class);
+    }
+
+    private TrailerResults getTrailersFromJson(JSONObject jsonObject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        return gson.fromJson(jsonObject.toString(), TrailerResults.class);
     }
 }

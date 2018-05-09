@@ -73,6 +73,21 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
+                    <Button
+                        android:id="@+id/bt_favorites_button"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="16dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/mark_as_favorite"
+                        android:layout_marginTop="16dp"
+                        android:onClick="favoritePressed"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorLineViewBackground"
+                        android:background="@color/colorDetailsFavoriteBackground"/>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -89,29 +104,27 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_margin="12dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
                 android:background="@color/colorLineViewBackground" />
 
-            <Button
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mark as favorite"
-                android:onClick="favoritePressed"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Trailers:"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mark as favorite"
-                android:onClick="tempRecall"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:id="@+id/iv_temp"/>
         </LinearLayout>
+
+
     </ScrollView>
 
     <ProgressBar

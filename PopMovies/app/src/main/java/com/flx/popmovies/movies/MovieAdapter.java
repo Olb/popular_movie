@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
-import com.flx.popmovies.utils.NetworkUtils;
+import com.flx.popmovies.util.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -54,6 +54,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
+        if (mMovieList == null) {
+            return 0;
+        }
         return mMovieList.size();
     }
 

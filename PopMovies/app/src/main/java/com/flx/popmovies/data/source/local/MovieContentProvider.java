@@ -21,15 +21,6 @@ public class MovieContentProvider extends ContentProvider {
 
     private static UriMatcher sUriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher() {
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES, MOVIES);
-
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
-
-        return uriMatcher;
-    }
 
     @Override
     public boolean onCreate() {
@@ -48,7 +39,7 @@ public class MovieContentProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        Cursor retCursor = null;
+        Cursor retCursor;
 
         switch (match) {
             case MOVIES:
@@ -61,13 +52,12 @@ public class MovieContentProvider extends ContentProvider {
                         sortOrder);
                 break;
             case MOVIE_WITH_ID:
-                String mId = uri.getPathSegments().get(1);
-                String mSelection = "_id=?";
-                String[] mSelectionArgs = new String[]{mId};
-
+                String id = uri.getPathSegments().get(1);
+                String whereClause = MoviesContract.MovieEntry.COLUMN_ID +"=?";
+                String[] mSelectionArgs = new String[]{id};
                 retCursor = db.query(MoviesContract.MovieEntry.TABLE_NAME,
                         projection,
-                        mSelection,
+                        whereClause,
                         mSelectionArgs,
                         null,
                         null,
@@ -126,12 +116,12 @@ public class MovieContentProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        int numberDeleted = 0;
+        int numberDeleted;
 
         switch (match) {
             case MOVIE_WITH_ID:
                 String id = uri.getPathSegments().get(1);
-                String whereClause = "_id=?";
+                String whereClause = MoviesContract.MovieEntry.COLUMN_ID +"=?";
                 String[] mSelectionArgs = new String[]{id};
                 numberDeleted = db.delete(MoviesContract.MovieEntry.TABLE_NAME, whereClause, mSelectionArgs);
                 break;
@@ -149,5 +139,15 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         return 0;
+    }
+
+    public static UriMatcher buildUriMatcher() {
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES, MOVIES);
+
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
+
+        return uriMatcher;
     }
 }

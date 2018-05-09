@@ -1,4 +1,4 @@
-package com.flx.popmovies.utils;
+package com.flx.popmovies.util;
 
 import android.net.ParseException;
 
@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class StringUtil {
+public class MoviesUtils {
 
     public static String stringToDateReport(String s){
         SimpleDateFormat format = new SimpleDateFormat("yyyy", Locale.US);
