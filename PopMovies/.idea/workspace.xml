@@ -11,30 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a37d78cb-3e41-44da-8c2d-c34a5ebebb33" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/ReviewsAdapter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/Review.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/ReviewResults.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/ReviewResults.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/Review.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesDataSource.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesDataSource.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieLocalDataSource.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieLocalDataSource.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/remote/MoviesRemoteDataSource.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/remote/MoviesRemoteDataSource.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/util/NetworkUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/util/NetworkUtils.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,26 +27,6 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DockManager">
-    <window id="2">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="TrailersAdapter.java" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/TrailersAdapter.java">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="357">
-                    <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -94,9 +58,12 @@
       <file leaf-file-name="activity_details.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="122" column="40" lean-forward="false" selection-start-line="122" selection-start-column="40" selection-end-line="122" selection-end-column="40" />
-              <folding />
+            <state relative-caret-position="335">
+              <caret line="132" column="37" lean-forward="false" selection-start-line="132" selection-start-column="37" selection-end-line="132" selection-end-column="37" />
+              <folding>
+                <element signature="e#2114#2156#0" expanded="true" />
+                <element signature="e#3620#3646#0" expanded="true" />
+              </folding>
             </state>
           </provider>
           <provider editor-type-id="android-designer2">
@@ -124,7 +91,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DetailsActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DetailsActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="259">
@@ -140,7 +107,7 @@
       <file leaf-file-name="ReviewsAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/ReviewsAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
+            <state relative-caret-position="374">
               <caret line="43" column="31" lean-forward="false" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -172,8 +139,8 @@
       <file leaf-file-name="trailier_list_item.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-159">
-              <caret line="5" column="39" lean-forward="false" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+            <state relative-caret-position="70">
+              <caret line="11" column="8" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="13" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -182,11 +149,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="review_list_item.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="review_list_item.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="41" column="50" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="50" />
+            <state relative-caret-position="172">
+              <caret line="50" column="55" lean-forward="false" selection-start-line="50" selection-start-column="55" selection-end-line="50" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -2273,9 +2240,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MoviesPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/Trailer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/TrailerResultsNew.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/TrailersAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/TrailerResults.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/ReviewResultsNew.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/ReviewResults.java" />
@@ -2283,13 +2248,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/util/NetworkUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/remote/MoviesRemoteDataSource.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/ReviewsAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieLocalDataSource.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/TrailersAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml" />
       </list>
     </option>
   </component>
@@ -2805,14 +2772,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1371" height="797" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31075996" sideWeight="0.51648355" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Build" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32547864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32547864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -3149,36 +3117,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/TrailersAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-159">
-          <caret line="5" column="39" lean-forward="false" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="41" column="50" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/Review.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="69">
@@ -3203,16 +3141,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/ReviewsAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="43" column="31" lean-forward="false" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -3232,17 +3160,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="122" column="40" lean-forward="false" selection-start-line="122" selection-start-column="40" selection-end-line="122" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="259">
@@ -3252,6 +3169,60 @@
             <element signature="e#6827#6828#0" expanded="true" />
           </folding>
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/TrailersAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/ReviewsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="43" column="31" lean-forward="false" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/trailier_list_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="11" column="8" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="13" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="132" column="37" lean-forward="false" selection-start-line="132" selection-start-column="37" selection-end-line="132" selection-end-column="37" />
+          <folding>
+            <element signature="e#2114#2156#0" expanded="true" />
+            <element signature="e#3620#3646#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/review_list_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="50" column="55" lean-forward="false" selection-start-line="50" selection-start-column="55" selection-end-line="50" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
   </component>
