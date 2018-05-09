@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
+import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 
 public class MoviesRepository implements MoviesDataSource {
@@ -120,8 +121,18 @@ public class MoviesRepository implements MoviesDataSource {
     }
 
     @Override
-    public void getReviews(long movieId, LoadMoviesResourceCallback callback) {
+    public void getReviews(long movieId, final LoadReviewsResourceCallback callback) {
+        mMoviesRemoteDataSource.getReviews(movieId, new LoadReviewsResourceCallback() {
+            @Override
+            public void onReviewsLoaded(ReviewResults reviewResults) {
+                callback.onReviewsLoaded(reviewResults);
+            }
 
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
     @Override

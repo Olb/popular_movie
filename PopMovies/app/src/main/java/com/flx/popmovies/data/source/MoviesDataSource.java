@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
+import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 
 public interface MoviesDataSource {
@@ -18,6 +19,13 @@ public interface MoviesDataSource {
     interface LoadTrailersResourceCallback {
 
         void onTrailersLoaded(TrailerResults trailerResults);
+
+        void onDataNotAvailable();
+    }
+
+    interface LoadReviewsResourceCallback {
+
+        void onReviewsLoaded(ReviewResults reviewResults);
 
         void onDataNotAvailable();
     }
@@ -55,7 +63,7 @@ public interface MoviesDataSource {
 
     void getTrailers(long movieId, LoadTrailersResourceCallback callback);
 
-    void getReviews(long movieId, LoadMoviesResourceCallback callback);
+    void getReviews(long movieId, LoadReviewsResourceCallback callback);
 
     void saveMovie(Movie movie, int isFavorite, SaveResourceCallback callback);
 

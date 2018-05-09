@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
@@ -99,8 +100,18 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
-    public void readReviews(long movieId) {
+    public void getReviews(long movieId) {
+        mMoviesRepository.getReviews(movieId, new MoviesDataSource.LoadReviewsResourceCallback() {
+            @Override
+            public void onReviewsLoaded(ReviewResults reviewResults) {
+                mMovieDetailsView.showReviews(Arrays.asList(reviewResults.getResults()));
+            }
 
+            @Override
+            public void onDataNotAvailable() {
+                Log.d("Oops", "No reviews");
+            }
+        });
     }
 
     private void loadMovie(final Movie movie) {
@@ -118,7 +129,6 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
                 setMovieUI(movie);
             }
         });
-        getTrailers(movie.getId());
     }
 
     private void setMovieUI(Movie movie) {
@@ -140,6 +150,8 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void start(Movie movie) {
         loadMovie(movie);
+        getTrailers(movie.getId());
+        getReviews(movie.getId());
     }
 
     @Override

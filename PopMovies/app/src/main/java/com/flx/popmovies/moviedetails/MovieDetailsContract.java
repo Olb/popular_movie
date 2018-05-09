@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.flx.popmovies.BasePresenter;
 import com.flx.popmovies.BaseView;
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.Review;
 import com.flx.popmovies.data.Trailer;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public interface MovieDetailsContract {
 
         void showTrailers(List<Trailer> trailers);
 
+        void showReviews(List<Review> reviews);
+
     }
 
     interface Presenter extends BasePresenter {
@@ -41,7 +44,7 @@ public interface MovieDetailsContract {
 
         void getTrailers(long movieId);
 
-        void readReviews(long movieId);
+        void getReviews(long movieId);
 
         void start(Movie movie);
     }

@@ -154,7 +154,7 @@ public class MovieLocalDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void getReviews(long movieId, LoadMoviesResourceCallback callback) {
+    public void getReviews(long movieId, LoadReviewsResourceCallback callback) {
 
     }
 

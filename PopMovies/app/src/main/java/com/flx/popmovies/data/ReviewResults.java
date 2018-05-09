@@ -5,49 +5,62 @@ import com.google.gson.annotations.SerializedName;
 
 public class ReviewResults {
 
-    @SerializedName("author")
-    @Expose
-    private String author;
-    @SerializedName("content")
-    @Expose
-    private String content;
     @SerializedName("id")
     @Expose
-    private String id;
-    @SerializedName("url")
+    private Integer id;
+    @SerializedName("page")
     @Expose
-    private String url;
+    private Integer page;
+    @SerializedName("results")
+    @Expose
+    private Review[] results = null;
+    @SerializedName("total_pages")
+    @Expose
+    private Integer totalPages;
+    @SerializedName("total_results")
+    @Expose
+    private Integer totalResults;
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+    public Integer getPage() {
+        return page;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Review[] getResults() {
+        return results;
+    }
+
+    public void setResults(Review[] results) {
+        this.results = results;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
 }
+
+

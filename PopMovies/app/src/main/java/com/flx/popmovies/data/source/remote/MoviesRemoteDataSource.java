@@ -9,6 +9,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.flx.popmovies.VolleySingleton;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
+import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.util.NetworkUtils;
@@ -109,8 +110,24 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void getReviews(long movieId, LoadMoviesResourceCallback callback) {
+    public void getReviews(long movieId, final LoadReviewsResourceCallback callback) {
+        URL url = NetworkUtils.buildReviewListUrl(String.valueOf(movieId));
 
+        String urlAsString = url.toString();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onReviewsLoaded(getReviewsFromJson(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onDataNotAvailable();
+            }
+        });
+
+        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
     }
 
     @Override
@@ -135,5 +152,12 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         return gson.fromJson(jsonObject.toString(), TrailerResults.class);
+    }
+
+    private ReviewResults getReviewsFromJson(JSONObject jsonObject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        return gson.fromJson(jsonObject.toString(), ReviewResults.class);
     }
 }

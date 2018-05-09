@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.Review;
 import com.flx.popmovies.data.Trailer;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
@@ -33,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener {
+public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener, ReviewsAdapter.ListItemClickListener {
 
     private static final String TAG = DetailsActivity.class.getSimpleName();
 
@@ -48,6 +49,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private Button mFavoritesButton;
 
     private TrailersAdapter mTrailerAdapter;
+    private ReviewsAdapter mReviewsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,22 +72,32 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
             Movie movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
-            setupTrailerAdapter();
             prepareMovieDetailsPresenter(movie);
+            setupAdapters();
         } else {
             throw new RuntimeException();
         }
     }
 
-    private void setupTrailerAdapter() {
+    private void setupAdapters() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mTrailerAdapter = new TrailersAdapter(this);
 
         RecyclerView mMovieRecyclerView = findViewById(R.id.rv_trailers);
         mMovieRecyclerView.setLayoutManager(layoutManager);
+        mMovieRecyclerView.setFocusable(false);
         mMovieRecyclerView.setHasFixedSize(true);
         mMovieRecyclerView.setAdapter(mTrailerAdapter);
+
+        LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this);
+        mReviewsAdapter = new ReviewsAdapter(this);
+
+        RecyclerView mReviewRecyclerView = findViewById(R.id.rv_reviews);
+        mReviewRecyclerView.setLayoutManager(reviewLayoutManager);
+        mReviewRecyclerView.setFocusable(false);
+        mReviewRecyclerView.setHasFixedSize(true);
+        mReviewRecyclerView.setAdapter(mReviewsAdapter);
     }
 
     private void prepareMovieDetailsPresenter(Movie movie) {
@@ -182,6 +194,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
+    public void showReviews(List<Review> reviews) {
+        mReviewsAdapter.setNewData(reviews);
+    }
+
+    @Override
     public void setPresenter(MovieDetailsContract.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -199,4 +216,5 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     public void onListItemClick(long movieId) {
 
     }
+
 }

@@ -51,6 +51,7 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
                 .appendPath(movieId)
                 .appendPath(REVIEW_PATH)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 
         return getUrlFromUri(builtUri);
