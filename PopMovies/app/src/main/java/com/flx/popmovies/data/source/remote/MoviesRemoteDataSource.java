@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.flx.popmovies.VolleySingleton;
 import com.flx.popmovies.data.Movie;
+import com.flx.popmovies.data.MovieDetail;
 import com.flx.popmovies.data.MovieResults;
 import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
@@ -41,7 +42,6 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
     public void getMovies(final String sortOrder, final LoadMoviesResourceCallback callback) {
 
         URL url = NetworkUtils.buildMovieListUrl(sortOrder);
-
         String urlAsString = url.toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
                 null, new Response.Listener<JSONObject>() {
@@ -58,7 +58,6 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         });
 
         VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
-
 
     }
 
@@ -140,6 +139,32 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         throw new UnsupportedOperationException("Remote resource cannot load from db");
     }
 
+    @Override
+    public void getMovieRuntime(Movie movie, final GetResourceRunTimeCallback callback) {
+        URL url = NetworkUtils.buildMovieDetailUrl(String.valueOf(movie.getId()));
+
+        String urlAsString = url.toString();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                MovieDetail movieDetail = getMovieDetailFromJson(response);
+                if (movieDetail == null || movieDetail.getRuntime() == null) {
+                    callback.onDataNotAvailable();
+                    return;
+                }
+                callback.onResourceRetrieved(movieDetail.getRuntime().toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onDataNotAvailable();
+            }
+        });
+
+        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+    }
+
     private MovieResults getMoviesFromJson(JSONObject jsonObject) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
@@ -159,5 +184,12 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         return gson.fromJson(jsonObject.toString(), ReviewResults.class);
+    }
+
+    private MovieDetail getMovieDetailFromJson(JSONObject jsonObject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        return gson.fromJson(jsonObject.toString(), MovieDetail.class);
     }
 }

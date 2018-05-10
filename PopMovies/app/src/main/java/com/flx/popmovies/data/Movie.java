@@ -3,7 +3,6 @@ package com.flx.popmovies.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -23,7 +22,6 @@ public class Movie implements Parcelable {
 
     private String title;
 
-    @NonNull
     @ColumnInfo(name = "popularity")
     private double popularity;
 
@@ -43,11 +41,11 @@ public class Movie implements Parcelable {
     @SerializedName("release_date")
     private String releaseDate;
 
+    private String runTime;
+
     private int isFavorite = 0;
 
-    public Movie() { }
-
-    protected Movie(Parcel in) {
+    public Movie(Parcel in) {
         mId = in.readLong();
         voteCount = in.readLong();
         video = in.readByte() != 0;
@@ -74,6 +72,10 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public Movie() {
+
+    }
 
     public long getId() {
         return mId;
@@ -122,6 +124,17 @@ public class Movie implements Parcelable {
 
     public void setIsFavorite(int favorite) {
         isFavorite = favorite;
+    }
+
+    public String getRunTime() {
+        if (runTime == null) {
+            return "";
+        }
+        return runTime;
+    }
+
+    public void setRunTime(String runTime) {
+        this.runTime = runTime;
     }
 
     @Override

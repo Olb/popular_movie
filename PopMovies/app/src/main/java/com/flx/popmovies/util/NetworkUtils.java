@@ -57,6 +57,15 @@ public class NetworkUtils {
         return getUrlFromUri(builtUri);
     }
 
+    public static URL buildMovieDetailUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIE_DB_BASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+
+        return getUrlFromUri(builtUri);
+    }
+
     @Nullable
     private static URL getUrlFromUri(Uri builtUri) {
         URL url = null;

@@ -1,11 +1,13 @@
 package com.flx.popmovies.moviedetails;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +31,7 @@ import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.util.Constants;
+import com.flx.popmovies.util.ContextSingleton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private TextView mMovieReleaseDateTextView;
     private TextView mMovieRatingTextView;
     private TextView mMovieSynopsisTextView;
+    private TextView mRuntime;
     private ProgressBar mProgressBar;
     private Button mFavoritesButton;
 
@@ -63,12 +67,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         mMovieSynopsisTextView = findViewById(R.id.tv_movie_synopsis);
         mProgressBar = findViewById(R.id.pb_loading_movie_details);
         mFavoritesButton = findViewById(R.id.bt_favorites_button);
-
-        if (!checkConnectivity()) {
-            return;
-        }
+        mRuntime = findViewById(R.id.tv_runtime);
+        mRuntime.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
+
+        ContextSingleton.getInstance(this);
 
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
             Movie movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
@@ -109,17 +113,15 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
                 localDataSource);
 
         mPresenter = new MovieDetailsPresenter(moviesRepository, this);
+
+        if (!isOnline()) {
+            mPresenter.setConnectionStatus(false);
+        } else {
+            mPresenter.setConnectionStatus(true);
+        }
+
         mPresenter.start(movie);
     }
-
-    private boolean checkConnectivity() {
-        if (!isOnline()) {
-            Toast.makeText(DetailsActivity.this, R.string.no_online_connection, Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -217,4 +219,41 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     }
 
+    @Override
+    public void onListItemClick(String trailerId) {
+        mPresenter.playTrailer(trailerId);
+    }
+
+    @Override
+    public void playMedia(Uri appUri, Uri webUir) {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, appUri);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webUir);
+
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException e) {
+            startActivity(webIntent);
+        }
+    }
+
+    @Override
+    public void setRuntime(String runtime) {
+        mRuntime.setText(runtime);
+        mRuntime.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setRuntimeUnavailable() {
+        mRuntime.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setOffline() {
+        findViewById(R.id.fl_online_contents).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setOnline() {
+        findViewById(R.id.fl_offline_contents).setVisibility(View.GONE);
+    }
 }

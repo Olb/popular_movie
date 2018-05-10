@@ -34,5 +34,7 @@ public final class MoviesContract {
 
         public static final String COLUMN_IS_FAVORITE = "favorite";
 
+        public static final String COLUMN_RUNTIME = "runtime";
+
     }
 }

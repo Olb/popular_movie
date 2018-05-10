@@ -31,8 +31,6 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener, MoviesContract.View {
 
     private static final int GRID_SPAN_COUNT = 2;
-    private static final String SORT_POPULARITY = "popular";
-    private static final String SORT_TOP_RATED = "top_rated";
 
     private MoviesContract.Presenter mPresenter;
     private MovieAdapter mMovieAdapter;
@@ -92,20 +90,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.action_change_sort:
-                if (item.getTitle().toString().equals(getString(R.string.menu_top_rated_sort))) {
-                    item.setTitle(R.string.menu_popular_sort);
-                    mPresenter.sortOrderChanged(SORT_TOP_RATED);
-                } else {
-                    item.setTitle(R.string.menu_top_rated_sort);
-                    mPresenter.sortOrderChanged(SORT_POPULARITY);
-                }
-                break;
-            case R.id.action_favorites:
-                mPresenter.showFavorites();
-                break;
-        }
+        mPresenter.menuItemSelected(item.getTitle().toString(),
+                mMenu.findItem(R.id.action_change_sort).getTitle().toString(), mMenu.findItem(R.id.action_favorites).getTitle().toString());
 
         return true;
     }
@@ -140,8 +126,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     @Override
-    public void menuBarTitle(String title) {
-        getMenuInflater();
+    public void setTitleForSortOrder(int resourceTitle) {
+        mMenu.findItem(R.id.action_change_sort).setTitle(getResources().getString(resourceTitle));
+    }
+
+    @Override
+    public void setTitleForFavoritesAction(int resourceTitle) {
+        mMenu.findItem(R.id.action_favorites).setTitle(getResources().getString(resourceTitle));
     }
 
     @Override

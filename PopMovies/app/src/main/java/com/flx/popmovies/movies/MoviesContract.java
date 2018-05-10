@@ -18,19 +18,18 @@ public interface MoviesContract {
 
         void showMovieDetail(Movie movie);
 
-        void menuBarTitle(String title);
+        void setTitleForSortOrder(int resourceTitle);
+
+        void setTitleForFavoritesAction(int resourceTitle);
 
     }
 
     interface Presenter extends BasePresenter {
 
-        void sortOrderChanged(String sortBy);
-
         void movieSelected(long movieId);
-
-        void showFavorites();
 
         void setOffline();
 
+        void menuItemSelected(String menuItemTitle, String currentMenuItemSortTitle, String favoritesActionTitle);
     }
 }

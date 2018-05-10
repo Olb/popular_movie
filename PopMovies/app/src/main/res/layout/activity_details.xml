@@ -66,12 +66,23 @@
                         android:textSize="28sp" />
 
                     <TextView
+                        android:id="@+id/tv_runtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:textSize="22sp"
+                        android:text="Loading..."
+                        android:textStyle="italic"
+                        android:textColor="@color/colorPrimary"/>
+
+                    <TextView
                         android:id="@+id/tv_movie_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"/>
 
                     <Button
                         android:id="@+id/bt_favorites_button"
@@ -106,38 +117,61 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorLineViewBackground" />
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimaryDark" />
 
             <TextView
+                android:id="@+id/fl_offline_contents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Trailers:"/>
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:textSize="26sp"
+                android:text="Trailers and Reviews not available when offline"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_trailers"
-                android:layout_width="match_parent"
-                android:focusable="false"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Reviews:"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_reviews"
-                android:focusable="false"
+            <LinearLayout
+                android:id="@+id/fl_online_contents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="26sp"
+                    android:text="Trailers:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_trailers"
+                    android:layout_width="match_parent"
+                    android:focusable="false"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="26sp"
+                    android:text="Reviews:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_reviews"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -51,6 +51,13 @@ public interface MoviesDataSource {
         void onDeleteFailed();
     }
 
+    interface GetResourceRunTimeCallback {
+
+        void onResourceRetrieved(String runtime);
+
+        void onDataNotAvailable();
+    }
+
     void getMovies(String sortOrder, LoadMoviesResourceCallback callback);
 
     void getFavorites(LoadMoviesResourceCallback callback);
@@ -68,5 +75,7 @@ public interface MoviesDataSource {
     void saveMovie(Movie movie, int isFavorite, SaveResourceCallback callback);
 
     void savePosterImage(String path, Bitmap posterImage, SaveResourceCallback callback);
+
+    void getMovieRuntime(Movie movie, GetResourceRunTimeCallback callback);
 
 }

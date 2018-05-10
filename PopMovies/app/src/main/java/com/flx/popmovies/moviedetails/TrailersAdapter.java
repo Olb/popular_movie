@@ -24,7 +24,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(long movieId);
+        void onListItemClick(String trailerId);
     }
 
     @NonNull
@@ -76,7 +76,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
         @Override
         public void onClick(View view) {
-            mOnClickListener.onListItemClick(Integer.valueOf(mTrailerList.get(getAdapterPosition()).getId()));
+            mOnClickListener.onListItemClick(mTrailerList.get(getAdapterPosition()).getKey());
         }
     }
 }

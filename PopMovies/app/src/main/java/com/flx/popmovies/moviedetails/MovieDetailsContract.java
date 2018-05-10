@@ -1,6 +1,7 @@
 package com.flx.popmovies.moviedetails;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.flx.popmovies.BasePresenter;
 import com.flx.popmovies.BaseView;
@@ -33,6 +34,15 @@ public interface MovieDetailsContract {
 
         void showReviews(List<Review> reviews);
 
+        void playMedia(Uri appUri, Uri webUir);
+
+        void setRuntime(String runtime);
+
+        void setRuntimeUnavailable();
+
+        void setOffline();
+
+        void setOnline();
     }
 
     interface Presenter extends BasePresenter {
@@ -40,12 +50,14 @@ public interface MovieDetailsContract {
 
         void removeFavorite();
 
-        void playTrailer(long movieId);
+        void playTrailer(String trailerId);
 
         void getTrailers(long movieId);
 
         void getReviews(long movieId);
 
         void start(Movie movie);
+
+        void setConnectionStatus(boolean connectionStatus);
     }
 }

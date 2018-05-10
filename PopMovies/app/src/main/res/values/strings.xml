@@ -12,4 +12,5 @@
     <string name="max_vote_denominator">/10</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Remove from favorites</string>
+    <string name="min">min</string>
 </resources>

@@ -1,11 +1,11 @@
 package com.flx.popmovies.data.source.local;
 
-import android.content.ContentValues;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.database.Cursor;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.flx.popmovies.data.Movie;
@@ -13,16 +13,12 @@ import com.flx.popmovies.data.MovieResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.util.ContextSingleton;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class MovieLocalDataSource implements MoviesDataSource {
 
     private static MovieLocalDataSource INSTANCE;
 
+    private MovieLocalDataSource() {
+    }
 
     public static MovieLocalDataSource getInstance() {
         if (INSTANCE == null) {
@@ -32,180 +28,182 @@ public class MovieLocalDataSource implements MoviesDataSource {
         return INSTANCE;
     }
 
-    private MovieLocalDataSource() {}
-
     @Override
-    public void getMovies(String sortOrder, LoadMoviesResourceCallback callback) {
+    public void getFavorites(final LoadMoviesResourceCallback callback) {
 
-    }
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                MovieResults movieResults = intent.getParcelableExtra(MovieIntentService.RESULT_MOVIES);
+                if (movieResults == null || movieResults.getMovies() == null) {
+                    callback.onDataNotAvailable();
+                    return;
+                }
+                callback.onMoviesLoaded(movieResults);
+            }
+        };
 
-    @Override
-    public void getFavorites(LoadMoviesResourceCallback callback) {
-        Cursor cursor = null;
+        IntentFilter intentFilter = new IntentFilter(
+                MovieIntentService.ACTION_GET_FAVORITES_FROM_DB);
 
-        try {
-            cursor = ContextSingleton.getInstance(null).getContext().getContentResolver()
-                    .query(MoviesContract.MovieEntry.CONTENT_URI,
-                            null,
-                            null,
-                            null,
-                            null);
-        } catch (Exception e) {
-            callback.onDataNotAvailable();
-        }
 
-        if (cursor == null) {
-            callback.onDataNotAvailable();
-            return;
-        }
+        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                .registerReceiver(broadcastReceiver,
+                        intentFilter);
 
-        List<Movie> movieList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Movie movie = buildMovie(cursor);
-            movie.setIsFavorite(1);
-            movieList.add(movie);
-        }
+        Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
+        intent.setAction(MovieIntentService.ACTION_GET_FAVORITES_FROM_DB);
 
-        Movie[] movies = new Movie[movieList.size()];
-        movies = movieList.toArray(movies);
-        MovieResults movieResults = new MovieResults();
-        movieResults.setMovies(movies);
-
-        callback.onMoviesLoaded(movieResults);
-    }
-
-    @Override
-    public void removeFavorite(long movieId, DeleteResourceCallback callback) {
-
-        Uri uri = MoviesContract.MovieEntry.CONTENT_URI;
-        uri = uri.buildUpon().appendPath(Long.toString(movieId)).build();
-
-        int numDeleted = ContextSingleton.getInstance(null).getContext()
-                .getContentResolver()
-                .delete(uri, null, null);
-
-        if (numDeleted != 0) {
-            callback.onResourceDeleted();
-        } else {
-            callback.onDeleteFailed();
-        }
-    }
-
-    @Override
-    public void getMovie(long movieId, GetResourceCallback callback) {
+        ContextSingleton.getInstance(null).getContext().startService(intent);
 
     }
 
     @Override
-    public void getSavedMovie(long movieId, GetResourceCallback callback) {
-        Cursor cursor = null;
+    public void removeFavorite(long movieId, final DeleteResourceCallback callback) {
 
-        Uri uri = MoviesContract.MovieEntry.CONTENT_URI;
-        uri = uri.buildUpon().appendPath(movieId + "").build();
-        try {
-            cursor = ContextSingleton.getInstance(null).getContext().getContentResolver()
-                    .query(uri,
-                            null,
-                            null,
-                            null,
-                            null);
-        } catch (Exception e) {
-            callback.onDataNotAvailable();
-            return;
-        }
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int numDeleted = intent.getIntExtra(MovieIntentService.REMOVE_FAVORITE, 0);
+                if (numDeleted != 0) {
+                    callback.onResourceDeleted();
+                } else {
+                    callback.onDeleteFailed();
+                }
+            }
+        };
 
-        if (cursor == null) {
-            callback.onDataNotAvailable();
-            return;
-        }
-        if (!cursor.moveToNext()) {
-            callback.onDataNotAvailable();
-            return;
-        }
-        callback.onMovieLoaded(buildMovie(cursor));
+        IntentFilter intentFilter = new IntentFilter(
+                MovieIntentService.ACTION_REMOVE_FAVORITE);
+
+
+        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                .registerReceiver(broadcastReceiver,
+                        intentFilter);
+
+        Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
+        intent.setAction(MovieIntentService.ACTION_REMOVE_FAVORITE);
+        intent.putExtra(MovieIntentService.REMOVE_FAVORITE, movieId);
+
+        ContextSingleton.getInstance(null).getContext().startService(intent);
+
     }
 
-    private Movie buildMovie(Cursor cursor) {
-        Movie movie = new Movie();
+    @Override
+    public void getSavedMovie(long movieId, final GetResourceCallback callback) {
 
-        int movieIdIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_ID);
-        int titleIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_TITLE);
-        int ratingIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RATING);
-        int releaseDateIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE);
-        int synopsisIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_SYNOPSIS);
-        int posterPath = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_POSTER_PATH);
-        int isFavorite = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_IS_FAVORITE);
-        long i = Integer.valueOf(cursor.getString(movieIdIndex));
-        movie.setId(i);
-        movie.setTitle(cursor.getString(titleIndex));
-        movie.setVoteAverage(Double.valueOf(cursor.getString(ratingIndex)));
-        movie.setReleaseDate(cursor.getString(releaseDateIndex));
-        movie.setOverview(cursor.getString(synopsisIndex));
-        movie.setPosterPath(cursor.getString(posterPath));
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Movie movie = intent.getParcelableExtra(MovieIntentService.RESULT_MOVIE);
+                if (movie == null) {
+                    callback.onDataNotAvailable();
+                    return;
+                }
+                callback.onMovieLoaded(movie);
+            }
+        };
 
-        Log.d("FAVO", cursor.getInt(isFavorite) +"");
-        movie.setIsFavorite(cursor.getInt(isFavorite));
+        IntentFilter intentFilter = new IntentFilter(
+                MovieIntentService.ACTION_GET_MOVIE_FROM_DB);
 
-        return movie;
+
+        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                .registerReceiver(broadcastReceiver,
+                        intentFilter);
+
+        Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
+        intent.setAction(MovieIntentService.ACTION_GET_MOVIE_FROM_DB);
+        intent.putExtra(MovieIntentService.RESULT_MOVIE, movieId);
+
+        ContextSingleton.getInstance(null).getContext().startService(intent);
+
     }
+
+    @Override
+    public void saveMovie(Movie movie, int isFavorite, final SaveResourceCallback callback) {
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean result = intent.getBooleanExtra(MovieIntentService.RESULT_MOVIE_SAVED, false);
+                if (result) {
+                    callback.onResourceSaved();
+                    return;
+                }
+                callback.onSaveFailed();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(
+                MovieIntentService.ACTION_SAVE_MOVIE_TO_DB);
+
+
+        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                .registerReceiver(broadcastReceiver,
+                        intentFilter);
+
+        Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
+        intent.setAction(MovieIntentService.ACTION_SAVE_MOVIE_TO_DB);
+
+        intent.putExtra(MovieIntentService.SAVE_MOVIE_PARCEL, movie);
+        intent.putExtra(MovieIntentService.SAVE_MOVIE_FAVORITE, isFavorite);
+
+        ContextSingleton.getInstance(null).getContext().startService(intent);
+    }
+
+    @Override
+    public void savePosterImage(String path, Bitmap posterImage, final SaveResourceCallback callback) {
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean result = intent.getBooleanExtra(MovieIntentService.RESULT_POSTER_SAVED, false);
+                if (result) {
+                    callback.onResourceSaved();
+                    return;
+                }
+                callback.onSaveFailed();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(
+                MovieIntentService.ACTION_SAVE_POSTER_IMAGE);
+
+
+        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                .registerReceiver(broadcastReceiver,
+                        intentFilter);
+
+        Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
+        intent.setAction(MovieIntentService.ACTION_SAVE_POSTER_IMAGE);
+
+        intent.putExtra(MovieIntentService.SAVE_POSTER_IMAGE_PARCEL, posterImage);
+        intent.putExtra(MovieIntentService.SAVE_POSTER_PATH, path);
+
+        ContextSingleton.getInstance(null).getContext().startService(intent);
+    }
+
+    @Override
+    public void getMovieRuntime(Movie movie, GetResourceRunTimeCallback callback) {
+        throw new UnsupportedOperationException("Cannot call this method for local data source");
+    }
+
     @Override
     public void getTrailers(long movieId, LoadTrailersResourceCallback callback) {
-
+        throw new UnsupportedOperationException("Cannot get trailers locally");
     }
 
     @Override
     public void getReviews(long movieId, LoadReviewsResourceCallback callback) {
-
+        throw new UnsupportedOperationException("Cannot get reviews locally");
     }
 
     @Override
-    public void saveMovie(Movie movie, int isFavorite, SaveResourceCallback callback) {
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_ID, movie.getId());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_RATING, movie.getVoteAverage());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_SYNOPSIS, movie.getOverview());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_IS_FAVORITE, isFavorite);
-
-        Uri uri = ContextSingleton.getInstance(null).getContext()
-                .getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, contentValues);
-
-        if (uri != null) {
-            callback.onResourceSaved();
-        } else {
-            callback.onSaveFailed();
-        }
+    public void getMovie(long movieId, GetResourceCallback callback) {
+        throw new UnsupportedOperationException("Cannot call this method in local remote source");
     }
 
     @Override
-    public void savePosterImage(String path, Bitmap posterImage, SaveResourceCallback callback) {
-        ContextWrapper cw = new ContextWrapper(ContextSingleton.getInstance(null).getContext());
-
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-        File imagePath = new File(directory,path);
-
-
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(imagePath);
-            posterImage.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.d("File Saved", "File saved at: " + imagePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                    callback.onResourceSaved();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                callback.onSaveFailed();
-            }
-        }
+    public void getMovies(String sortOrder, LoadMoviesResourceCallback callback) {
+        throw new UnsupportedOperationException("Cannot call this method on local");
     }
 }

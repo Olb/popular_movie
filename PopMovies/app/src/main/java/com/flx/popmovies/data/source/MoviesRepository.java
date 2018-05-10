@@ -165,4 +165,19 @@ public class MoviesRepository implements MoviesDataSource {
         });
     }
 
+    @Override
+    public void getMovieRuntime(Movie movie, final GetResourceRunTimeCallback callback) {
+        mMoviesRemoteDataSource.getMovieRuntime(movie, new GetResourceRunTimeCallback() {
+            @Override
+            public void onResourceRetrieved(String runtime) {
+                callback.onResourceRetrieved(runtime);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
 }

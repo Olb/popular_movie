@@ -1,13 +1,16 @@
 package com.flx.popmovies.moviedetails;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
+import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
+import com.flx.popmovies.util.ContextSingleton;
 import com.flx.popmovies.util.MoviesUtils;
 
 import java.util.Arrays;
@@ -53,7 +56,6 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
             @Override
             public void onSaveFailed() {
                 Log.d("Image NOT Saved", "Image failed saved.");
-
             }
         });
     }
@@ -76,9 +78,10 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
-    public void playTrailer(long movieId) {
-
-
+    public void playTrailer(String trailerId) {
+        Uri webUri = Uri.parse("http://www.youtube.com/watch?v=" + trailerId);
+        Uri appUri = Uri.parse("vnd.youtube://" + trailerId);
+        mMovieDetailsView.playMedia(appUri, webUri);
     }
 
     @Override
@@ -117,16 +120,18 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     private void loadMovie(final Movie movie) {
         Log.d("TrailersPresenter", "Getting movis.");
 
-        mMovieDetailsView.setLoadingIndicator(true);
         mMoviesRepository.getMovie(movie.getId(), new MoviesDataSource.GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
+                mCurrentMovie = movie;
+                getRuntime(movie);
                 setMovieUI(movie);
             }
 
             @Override
             public void onDataNotAvailable() {
-                setMovieUI(movie);
+                getRuntime(movie);
+                setMovieUI(mCurrentMovie);
             }
         });
     }
@@ -147,11 +152,45 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMovieDetailsView.setLoadingIndicator(false);
     }
 
+    private void getRuntime(Movie movie) {
+        if ((mCurrentMovie.getRunTime() != null) && !mCurrentMovie.getRunTime().isEmpty()) {
+            mMovieDetailsView.setRuntime(mCurrentMovie.getRunTime());
+            mMovieDetailsView.setLoadingIndicator(false);
+            return;
+        }
+        mMoviesRepository.getMovieRuntime(movie, new MoviesDataSource.GetResourceRunTimeCallback() {
+            @Override
+            public void onResourceRetrieved(String runtime) {
+                String min = ContextSingleton.getInstance(null).getContext().getResources().getString(R.string.min);
+                mCurrentMovie.setRunTime(runtime + min);
+                mMovieDetailsView.setRuntime(mCurrentMovie.getRunTime());
+                mMovieDetailsView.setLoadingIndicator(false);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                mMovieDetailsView.setRuntimeUnavailable();
+                mMovieDetailsView.setLoadingIndicator(false);
+            }
+        });
+    }
+
     @Override
     public void start(Movie movie) {
+        mMovieDetailsView.setLoadingIndicator(true);
+        mCurrentMovie = movie;
         loadMovie(movie);
         getTrailers(movie.getId());
         getReviews(movie.getId());
+    }
+
+    @Override
+    public void setConnectionStatus(boolean connectionStatus) {
+        if (connectionStatus) {
+            mMovieDetailsView.setOnline();
+        } else {
+            mMovieDetailsView.setOffline();
+        }
     }
 
     @Override
