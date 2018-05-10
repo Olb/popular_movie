@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.VolleySingleton;
@@ -48,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         prepareMoviesRecyclerView();
 
+        if (!isOnline()) {
+            mPresenter.setOffline();
+        } else {
+            mPresenter.start();
+        }
     }
 
     private void prepareMoviesPresenter() {
@@ -59,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                 localDataSource);
 
         mPresenter = new MoviesPresenter(moviesRepository, this);
-
-        mPresenter.start();
     }
 
     private void prepareMoviesRecyclerView() {
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         mPresenter.menuItemSelected(item.getTitle().toString(),
                 mMenu.findItem(R.id.action_change_sort).getTitle().toString(), mMenu.findItem(R.id.action_favorites).getTitle().toString());
 
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     @Override
     public void showMovies(List<Movie> movieList) {
+        findViewById(R.id.tv_no_results_or_error_message).setVisibility(View.INVISIBLE);
         mMovieAdapter.setNewData(movieList);
     }
 
@@ -115,6 +119,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         TextView errorMessageTextView = this.findViewById(R.id.tv_no_results_or_error_message);
         errorMessageTextView.setText(R.string.error_message);
         errorMessageTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showOffline() {
+        findViewById(R.id.tv_no_results_or_error_message).setVisibility(View.VISIBLE);
+        Toast.makeText(this, "Feel free to look at favorites while offline.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showNoResults() {
+        ((TextView)findViewById(R.id.tv_no_results_or_error_message)).setText(getText(R.string.no_results_message));
+        findViewById(R.id.tv_no_results_or_error_message).setVisibility(View.VISIBLE);
     }
 
     @Override

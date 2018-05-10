@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".movies.MainActivity">
+        <activity android:name=".movies.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,9 +30,11 @@
 
         <provider
             android:authorities="com.flx.popmovies"
-            android:name=".data.source.local.MovieContentProvider" />
+            android:name=".data.source.local.MovieContentProvider"
+            android:exported="false"/>
 
         <service android:name=".data.source.local.MovieIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
     </application>
 

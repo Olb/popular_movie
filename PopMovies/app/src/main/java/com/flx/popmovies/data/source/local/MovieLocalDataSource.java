@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
@@ -31,10 +30,14 @@ public class MovieLocalDataSource implements MoviesDataSource {
     @Override
     public void getFavorites(final LoadMoviesResourceCallback callback) {
 
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 MovieResults movieResults = intent.getParcelableExtra(MovieIntentService.RESULT_MOVIES);
+                LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).
+                        getContext()).
+                        unregisterReceiver(this);
+
                 if (movieResults == null || movieResults.getMovies() == null) {
                     callback.onDataNotAvailable();
                     return;
@@ -44,18 +47,18 @@ public class MovieLocalDataSource implements MoviesDataSource {
         };
 
         IntentFilter intentFilter = new IntentFilter(
-                MovieIntentService.ACTION_GET_FAVORITES_FROM_DB);
+                MovieIntentService.FAVORITES_RETREIVED);
 
-
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
-                .registerReceiver(broadcastReceiver,
-                        intentFilter);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext());
+        broadcastManager.registerReceiver(broadcastReceiver,
+                intentFilter);
 
         Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
         intent.setAction(MovieIntentService.ACTION_GET_FAVORITES_FROM_DB);
 
-        ContextSingleton.getInstance(null).getContext().startService(intent);
-
+        Context context = ContextSingleton.getInstance(null).getContext();
+        MovieIntentService.enqueueWork(context, MovieIntentService.class, 333, intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override
@@ -74,19 +77,20 @@ public class MovieLocalDataSource implements MoviesDataSource {
         };
 
         IntentFilter intentFilter = new IntentFilter(
-                MovieIntentService.ACTION_REMOVE_FAVORITE);
+                MovieIntentService.REMOVED_FAVORITE);
 
 
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
-                .registerReceiver(broadcastReceiver,
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext());
+        broadcastManager.registerReceiver(broadcastReceiver,
                         intentFilter);
 
         Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
         intent.setAction(MovieIntentService.ACTION_REMOVE_FAVORITE);
         intent.putExtra(MovieIntentService.REMOVE_FAVORITE, movieId);
 
-        ContextSingleton.getInstance(null).getContext().startService(intent);
-
+        Context context = ContextSingleton.getInstance(null).getContext();
+        MovieIntentService.enqueueWork(context, MovieIntentService.class, 333, intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class MovieLocalDataSource implements MoviesDataSource {
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Movie movie = intent.getParcelableExtra(MovieIntentService.RESULT_MOVIE);
+                Movie movie = intent.getParcelableExtra(MovieIntentService.MOVIE_RETREIVED);
                 if (movie == null) {
                     callback.onDataNotAvailable();
                     return;
@@ -105,19 +109,19 @@ public class MovieLocalDataSource implements MoviesDataSource {
         };
 
         IntentFilter intentFilter = new IntentFilter(
-                MovieIntentService.ACTION_GET_MOVIE_FROM_DB);
+                MovieIntentService.ACTION_RETRIEVED_MOVIE_FROM_DB);
 
-
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
-                .registerReceiver(broadcastReceiver,
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext());
+        broadcastManager.registerReceiver(broadcastReceiver,
                         intentFilter);
 
         Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
         intent.setAction(MovieIntentService.ACTION_GET_MOVIE_FROM_DB);
         intent.putExtra(MovieIntentService.RESULT_MOVIE, movieId);
 
-        ContextSingleton.getInstance(null).getContext().startService(intent);
-
+        Context context = ContextSingleton.getInstance(null).getContext();
+        MovieIntentService.enqueueWork(context, MovieIntentService.class, 333, intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override
@@ -125,7 +129,10 @@ public class MovieLocalDataSource implements MoviesDataSource {
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean result = intent.getBooleanExtra(MovieIntentService.RESULT_MOVIE_SAVED, false);
+                boolean result = intent.getBooleanExtra(MovieIntentService.MOVIE_SAVED, false);
+                LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).
+                        getContext()).
+                        unregisterReceiver(this);
                 if (result) {
                     callback.onResourceSaved();
                     return;
@@ -135,20 +142,20 @@ public class MovieLocalDataSource implements MoviesDataSource {
         };
 
         IntentFilter intentFilter = new IntentFilter(
-                MovieIntentService.ACTION_SAVE_MOVIE_TO_DB);
+                MovieIntentService.RESULT_MOVIE_SAVED);
 
-
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
-                .registerReceiver(broadcastReceiver,
-                        intentFilter);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext());
+        broadcastManager.registerReceiver(broadcastReceiver,
+                intentFilter);
 
         Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
         intent.setAction(MovieIntentService.ACTION_SAVE_MOVIE_TO_DB);
-
         intent.putExtra(MovieIntentService.SAVE_MOVIE_PARCEL, movie);
         intent.putExtra(MovieIntentService.SAVE_MOVIE_FAVORITE, isFavorite);
 
-        ContextSingleton.getInstance(null).getContext().startService(intent);
+        Context context = ContextSingleton.getInstance(null).getContext();
+        MovieIntentService.enqueueWork(context, MovieIntentService.class, 333, intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override
@@ -157,6 +164,9 @@ public class MovieLocalDataSource implements MoviesDataSource {
             @Override
             public void onReceive(Context context, Intent intent) {
                 boolean result = intent.getBooleanExtra(MovieIntentService.RESULT_POSTER_SAVED, false);
+                LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).
+                        getContext()).
+                        unregisterReceiver(this);
                 if (result) {
                     callback.onResourceSaved();
                     return;
@@ -166,12 +176,12 @@ public class MovieLocalDataSource implements MoviesDataSource {
         };
 
         IntentFilter intentFilter = new IntentFilter(
-                MovieIntentService.ACTION_SAVE_POSTER_IMAGE);
+                MovieIntentService.ACTION_SAVED_POSTER_IMAGE);
 
 
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
-                .registerReceiver(broadcastReceiver,
-                        intentFilter);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext());
+        broadcastManager.registerReceiver(broadcastReceiver,
+                intentFilter);
 
         Intent intent = new Intent(ContextSingleton.getInstance(null).getContext(), MovieIntentService.class);
         intent.setAction(MovieIntentService.ACTION_SAVE_POSTER_IMAGE);
@@ -179,7 +189,9 @@ public class MovieLocalDataSource implements MoviesDataSource {
         intent.putExtra(MovieIntentService.SAVE_POSTER_IMAGE_PARCEL, posterImage);
         intent.putExtra(MovieIntentService.SAVE_POSTER_PATH, path);
 
-        ContextSingleton.getInstance(null).getContext().startService(intent);
+        Context context = ContextSingleton.getInstance(null).getContext();
+        MovieIntentService.enqueueWork(context, MovieIntentService.class, 333, intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override

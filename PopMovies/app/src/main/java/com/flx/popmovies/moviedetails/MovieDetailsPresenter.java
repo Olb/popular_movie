@@ -42,7 +42,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
             @Override
             public void onSaveFailed() {
-                throw new UnsupportedOperationException("Couldn't save");
+                throw new RuntimeException();
             }
         });
 
@@ -56,6 +56,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
             @Override
             public void onSaveFailed() {
                 Log.d("Image NOT Saved", "Image failed saved.");
+                throw new RuntimeException();
             }
         });
     }
@@ -70,9 +71,9 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
             @Override
             public void onDeleteFailed() {
-
                 // TODO: Show delete on success or not
                 Log.d("DeleteFail", "Deletion Failed");
+                throw new RuntimeException();
             }
         });
     }
@@ -98,6 +99,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
             @Override
             public void onDataNotAvailable() {
                 Log.d("Oops", "No Trailers");
+                throw new RuntimeException();
             }
         });
     }
@@ -113,6 +115,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
             @Override
             public void onDataNotAvailable() {
                 Log.d("Oops", "No reviews");
+                throw new RuntimeException();
             }
         });
     }

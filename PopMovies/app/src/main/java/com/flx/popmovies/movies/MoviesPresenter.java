@@ -72,7 +72,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             @Override
             public void onMoviesLoaded(MovieResults movieResults) {
                 movieList = Arrays.asList(movieResults.getMovies());
-                mMoviesView.showMovies(movieList);
+                if (movieList.size() == 0) {
+                    mMoviesView.showMovies(null);
+                    mMoviesView.showNoResults();
+                } else {
+                    mMoviesView.showMovies(movieList);
+                }
                 mMoviesView.setLoadingIndicator(false);
             }
 
@@ -86,7 +91,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void setOffline() {
-        mMoviesView.showError();
+        mMoviesView.showOffline();
     }
 
     @Override

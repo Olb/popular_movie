@@ -1,6 +1,7 @@
 package com.flx.popmovies.data.source.remote;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,6 +44,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
         URL url = NetworkUtils.buildMovieListUrl(sortOrder);
         String urlAsString = url.toString();
+        Log.d("MOVIES", urlAsString);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
                 null, new Response.Listener<JSONObject>() {
             @Override

@@ -16,6 +16,10 @@ public interface MoviesContract {
 
         void showError();
 
+        void showOffline();
+
+        void showNoResults();
+
         void showMovieDetail(Movie movie);
 
         void setTitleForSortOrder(int resourceTitle);

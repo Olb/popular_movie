@@ -2,6 +2,7 @@
   <dictionary name="billy">
     <words>
       <w>moviedetails</w>
+      <w>popmovies</w>
     </words>
   </dictionary>
 </component>
