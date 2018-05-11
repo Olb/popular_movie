@@ -1,4 +1,5 @@
 package com.flx.popmovies;
+/* Followed Udacity tutorial in creating this class */
 
 import android.content.ComponentName;
 import android.content.ContentResolver;

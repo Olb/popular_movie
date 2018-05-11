@@ -1,4 +1,5 @@
 package com.flx.popmovies;
+/* Followed Google example in creating this class */
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;

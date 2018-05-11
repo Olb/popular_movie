@@ -1,5 +1,5 @@
 package com.flx.popmovies.data.source.local;
-
+/* Followed Udacity tutorial in creating this class */
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
