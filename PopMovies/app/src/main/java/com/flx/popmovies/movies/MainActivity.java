@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flx.popmovies.R;
-import com.flx.popmovies.VolleySingleton;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
@@ -24,7 +23,6 @@ import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.moviedetails.DetailsActivity;
 import com.flx.popmovies.util.Constants;
-import com.flx.popmovies.util.ContextSingleton;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,18 +30,21 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener, MoviesContract.View {
 
     private static final int GRID_SPAN_COUNT = 2;
+    private static final String LAST_SELECTED = "last-selected";
+    private static final String LAST_ACTION_ITEM = "last-action";
+    private static final String LAST_FAVORITE_ITEM = "last-favorite";
 
     private MoviesContract.Presenter mPresenter;
     private MovieAdapter mMovieAdapter;
     private Menu mMenu;
+    private String mLastSelected;
+    private String mLastAction;
+    private String mLastFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        VolleySingleton.getInstance(this);
-        ContextSingleton.getInstance(this);
 
         prepareMoviesPresenter();
 
@@ -52,15 +53,39 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         if (!isOnline()) {
             mPresenter.setOffline();
         } else {
-            mPresenter.start();
+            if (savedInstanceState != null) {
+                if (savedInstanceState.containsKey(LAST_SELECTED)) {
+                     mLastSelected = savedInstanceState.getString(LAST_SELECTED);
+                     mLastAction = savedInstanceState.getString(LAST_ACTION_ITEM);
+                     mLastFavorite = savedInstanceState.getString(LAST_FAVORITE_ITEM);
+                }
+            } else {
+                mPresenter.start();
+            }
         }
     }
 
-    private void prepareMoviesPresenter() {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        String lastMenuItem = mPresenter.getLastMenuItemSelected();
+        String actionItem = mMenu.findItem(R.id.action_change_sort).getTitle().toString();
+        String popularItem = mMenu.findItem(R.id.action_favorites).getTitle().toString();
+        outState.putString(LAST_SELECTED, lastMenuItem);
+        outState.putString(LAST_ACTION_ITEM, actionItem);
+        outState.putString(LAST_FAVORITE_ITEM, popularItem);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.refreshContent();
+    }
+
+    private void prepareMoviesPresenter() {
         MoviesDataSource remoteDataSource = MoviesRemoteDataSource.getInstance();
         MoviesDataSource localDataSource = MovieLocalDataSource.getInstance();
-
         MoviesRepository moviesRepository = MoviesRepository.getInstance(remoteDataSource,
                 localDataSource);
 
@@ -88,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         mMenu = menu;
+        if (mLastSelected != null) {
+            mPresenter.menuItemSelected(mLastSelected, mLastAction, mLastFavorite);
+        }
         return true;
     }
 
@@ -123,8 +151,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     @Override
     public void showOffline() {
-        findViewById(R.id.tv_no_results_or_error_message).setVisibility(View.VISIBLE);
-        Toast.makeText(this, "Feel free to look at favorites while offline.", Toast.LENGTH_LONG).show();
+        TextView errorMessageTextView = this.findViewById(R.id.tv_no_results_or_error_message);
+        errorMessageTextView.setText(R.string.no_online_connection);
+        errorMessageTextView.setVisibility(View.VISIBLE);
+        Toast.makeText(this, R.string.see_favorites_prompt, Toast.LENGTH_LONG).show();
     }
 
     @Override

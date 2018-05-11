@@ -9,18 +9,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
@@ -31,18 +30,16 @@ import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.data.source.local.MovieLocalDataSource;
 import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.util.Constants;
-import com.flx.popmovies.util.ContextSingleton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
 
-public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener, ReviewsAdapter.ListItemClickListener {
+public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener {
 
-    private static final String TAG = DetailsActivity.class.getSimpleName();
+    private static final String CURRENT_MOVIE = "current-movie";
 
     private MovieDetailsContract.Presenter mPresenter;
-
     private TextView mMovieTitleTextView;
     private ImageView mMoviePosterImageView;
     private TextView mMovieReleaseDateTextView;
@@ -51,7 +48,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private TextView mRuntime;
     private ProgressBar mProgressBar;
     private Button mFavoritesButton;
-
     private TrailersAdapter mTrailerAdapter;
     private ReviewsAdapter mReviewsAdapter;
 
@@ -59,6 +55,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        ActionBar actionBar = this.getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mMovieTitleTextView = findViewById(R.id.tv_movie_title);
         mMoviePosterImageView = findViewById(R.id.iv_movie_poster);
@@ -72,15 +74,26 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
         Intent intent = getIntent();
 
-        ContextSingleton.getInstance(this);
-
+        Movie movie;
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
-            Movie movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
-            prepareMovieDetailsPresenter(movie);
+            if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_MOVIE)) {
+                movie = savedInstanceState.getParcelable(CURRENT_MOVIE);
+            } else {
+                movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
+            }
             setupAdapters();
         } else {
             throw new RuntimeException();
         }
+
+        prepareMovieDetailsPresenter(movie);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(CURRENT_MOVIE, mPresenter.getCurrentMovie());
     }
 
     private void setupAdapters() {
@@ -95,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         mMovieRecyclerView.setAdapter(mTrailerAdapter);
 
         LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this);
-        mReviewsAdapter = new ReviewsAdapter(this);
+        mReviewsAdapter = new ReviewsAdapter();
 
         RecyclerView mReviewRecyclerView = findViewById(R.id.rv_reviews);
         mReviewRecyclerView.setLayoutManager(reviewLayoutManager);
@@ -124,15 +137,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(DetailsActivity.this, R.string.not_implemented_toast, Toast.LENGTH_SHORT).show();
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -170,8 +179,10 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     public void setFavoritesMarked(boolean isFavorite) {
         if (isFavorite) {
             mFavoritesButton.setText(getResources().getText(R.string.unmark_as_favorite));
+            mFavoritesButton.setBackgroundColor(getResources().getColor(R.color.colorDetailsFavoriteSetBackground));
         } else {
             mFavoritesButton.setText(getResources().getText(R.string.mark_as_favorite));
+            mFavoritesButton.setBackgroundColor(getResources().getColor(R.color.colorDetailsFavoriteBackground));
         }
     }
 
@@ -212,11 +223,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         } else {
             mPresenter.removeFavorite();
         }
-    }
-
-    @Override
-    public void onListItemClick(long movieId) {
-
     }
 
     @Override

@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/play_trailer_image"
         app:srcCompat="@drawable/ic_baseline_play_arrow_24px" />
 
     <TextView

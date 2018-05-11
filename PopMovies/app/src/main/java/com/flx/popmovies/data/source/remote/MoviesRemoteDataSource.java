@@ -1,7 +1,6 @@
 package com.flx.popmovies.data.source.remote;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -41,10 +40,8 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
 
     @Override
     public void getMovies(final String sortOrder, final LoadMoviesResourceCallback callback) {
-
         URL url = NetworkUtils.buildMovieListUrl(sortOrder);
         String urlAsString = url.toString();
-        Log.d("MOVIES", urlAsString);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlAsString,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -59,7 +56,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
             }
         });
 
-        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest);
 
     }
 
@@ -107,7 +104,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
             }
         });
 
-        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
     @Override
@@ -128,7 +125,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
             }
         });
 
-        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
     @Override
@@ -164,7 +161,7 @@ public class MoviesRemoteDataSource implements MoviesDataSource {
             }
         });
 
-        VolleySingleton.getInstance().addtoRequestQueue(jsonObjectRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
     private MovieResults getMoviesFromJson(JSONObject jsonObject) {

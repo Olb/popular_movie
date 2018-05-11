@@ -3,7 +3,6 @@ package com.flx.popmovies.movies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     final private ListItemClickListener mOnClickListener;
 
-    public MovieAdapter(ListItemClickListener onClickListener) {
+    MovieAdapter(ListItemClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
     }
 
@@ -75,13 +74,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         void bind(int position) {
             Movie movie = mMovieList.get(position);
             String moviePath = NetworkUtils.IMAGES_BASE_URL + movie.getPosterPath();
-            Log.d("List Item URL", moviePath);
             Picasso.get().load(moviePath).into(mMovieImageView);
         }
 
         @Override
         public void onClick(View view) {
-            Log.d("MOVIE ID", mMovieList.get(getAdapterPosition()).getId() + "");
             mOnClickListener.onListItemClick(mMovieList.get(getAdapterPosition()).getId());
         }
     }

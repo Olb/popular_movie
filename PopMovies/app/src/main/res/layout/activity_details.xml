@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="0dp"
                         android:textSize="22sp"
-                        android:text="Loading..."
+                        android:text="@string/loading"
                         android:textStyle="italic"
                         android:textColor="@color/colorPrimary"/>
 
@@ -129,7 +129,7 @@
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"
                 android:textSize="26sp"
-                android:text="Trailers and Reviews not available when offline"/>
+                android:text="@string/trailers_and_reviews_not_available_when_offline"/>
 
             <LinearLayout
                 android:id="@+id/fl_online_contents"
@@ -144,7 +144,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="10dp"
                     android:textSize="26sp"
-                    android:text="Trailers:"/>
+                    android:text="@string/trailers"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_trailers"
@@ -160,7 +160,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="10dp"
                     android:textSize="26sp"
-                    android:text="Reviews:"/>
+                    android:text="@string/reviews"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_reviews"

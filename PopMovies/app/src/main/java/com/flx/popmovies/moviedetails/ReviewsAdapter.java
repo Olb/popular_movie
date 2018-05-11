@@ -17,16 +17,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
     private List<Review> mReviewList;
 
-    final private ListItemClickListener mOnClickListner;
-
-    public ReviewsAdapter(ListItemClickListener onClickListner) {
-        this.mOnClickListner = onClickListner;
-    }
-
-    public interface ListItemClickListener {
-        void onListItemClick(long movieId);
-    }
-
     @NonNull
     @Override
     public ReviewsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -57,7 +47,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
         return mReviewList.size();
     }
 
-    public class ReviewsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ReviewsAdapterViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView mAuthorTextView;
         private final TextView mContentTextView;
@@ -75,11 +65,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
             mAuthorTextView.setText(mReviewList.get(position).getAuthor());
             mContentTextView.setText(mReviewList.get(position).getContent());
             mOriginalPostTextView.setText(mReviewList.get(position).getUrl());
-        }
-
-        @Override
-        public void onClick(View view) {
-            // TODO: Handle click for review
         }
     }
 }

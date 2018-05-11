@@ -45,7 +45,7 @@ public class Movie implements Parcelable {
 
     private int isFavorite = 0;
 
-    public Movie(Parcel in) {
+    Movie(Parcel in) {
         mId = in.readLong();
         voteCount = in.readLong();
         video = in.readByte() != 0;

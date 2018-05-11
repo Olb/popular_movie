@@ -48,14 +48,13 @@ public class TestMovieContentProvider {
 
             ProviderInfo providerInfo = pm.getProviderInfo(componentName, 0);
             String actualAuthority = providerInfo.authority;
-            String expectedAuthority = packageName;
 
             String errorMessage =
                     "Error: MovieContentProvider registered with authority: " + actualAuthority +
-                            " instead of expected authority: " + expectedAuthority;
+                            " instead of expected authority: " + packageName;
             assertEquals(errorMessage,
                     actualAuthority,
-                    expectedAuthority);
+                    packageName);
 
         } catch (PackageManager.NameNotFoundException e) {
             String providerNotRegistered =
@@ -94,6 +93,7 @@ public class TestMovieContentProvider {
 
         String errorMessage = "Unable to insert item through Provider";
         Uri actualUri = contentResolver.insert(MoviesContract.MovieEntry.CONTENT_URI, contentValues);
+        assert actualUri != null;
         String id = actualUri.getPathSegments().get(1);
 
         assertTrue(errorMessage, Integer.valueOf(id) != -1);

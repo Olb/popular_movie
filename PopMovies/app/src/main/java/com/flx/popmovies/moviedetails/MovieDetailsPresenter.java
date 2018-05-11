@@ -4,28 +4,26 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
+import com.flx.popmovies.PopMovies;
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.ReviewResults;
 import com.flx.popmovies.data.TrailerResults;
 import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
-import com.flx.popmovies.util.ContextSingleton;
 import com.flx.popmovies.util.MoviesUtils;
 
 import java.util.Arrays;
 
 public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
+    private final static String TAG = MovieDetailsPresenter.class.getSimpleName();
     private final MovieDetailsContract.View mMovieDetailsView;
-    private MoviesRepository mMoviesRepository;
-
-    private final String RATING_DENOMINATOR = "/10";
-    private final int FAVORITE = 1;
+    private final MoviesRepository mMoviesRepository;
 
     private Movie mCurrentMovie;
 
-    public MovieDetailsPresenter(MoviesRepository moviesRepository, MovieDetailsContract.View movieDetailsView) {
+    MovieDetailsPresenter(MoviesRepository moviesRepository, MovieDetailsContract.View movieDetailsView) {
         this.mMovieDetailsView = movieDetailsView;
         this.mMoviesRepository = moviesRepository;
         this.mMovieDetailsView.setPresenter(this);
@@ -34,6 +32,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void markFavorite() {
 
+        int FAVORITE = 1;
         mMoviesRepository.saveMovie(mCurrentMovie, FAVORITE, new MoviesDataSource.SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
@@ -50,12 +49,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMoviesRepository.savePosterImage(mCurrentMovie.getPosterPath(), posterImageBitmap, new MoviesDataSource.SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
-                Log.d("Image Saved", "Image saved.");
+                Log.d(TAG, "Image saved.");
             }
 
             @Override
             public void onSaveFailed() {
-                Log.d("Image NOT Saved", "Image failed saved.");
                 throw new RuntimeException();
             }
         });
@@ -66,13 +64,12 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMoviesRepository.removeFavorite(mCurrentMovie.getId(), new MoviesDataSource.DeleteResourceCallback() {
             @Override
             public void onResourceDeleted() {
+                mCurrentMovie.setIsFavorite(0);
                 mMovieDetailsView.setFavoritesMarked(false);
             }
 
             @Override
             public void onDeleteFailed() {
-                // TODO: Show delete on success or not
-                Log.d("DeleteFail", "Deletion Failed");
                 throw new RuntimeException();
             }
         });
@@ -87,19 +84,15 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     @Override
     public void getTrailers(long movieId) {
-        Log.d("TrailersPresenter", "Getting trailers.");
-
         mMoviesRepository.getTrailers(movieId, new MoviesDataSource.LoadTrailersResourceCallback() {
             @Override
             public void onTrailersLoaded(TrailerResults trailerResults) {
-                Log.d("TrailersPresenter", "Call back");
                 mMovieDetailsView.showTrailers(Arrays.asList(trailerResults.getResults()));
             }
 
             @Override
             public void onDataNotAvailable() {
-                Log.d("Oops", "No Trailers");
-                throw new RuntimeException();
+                Log.d(TAG, "No Trailers");
             }
         });
     }
@@ -114,15 +107,12 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
-                Log.d("Oops", "No reviews");
-                throw new RuntimeException();
+                Log.d(TAG, "No reviews");
             }
         });
     }
 
     private void loadMovie(final Movie movie) {
-        Log.d("TrailersPresenter", "Getting movis.");
-
         mMoviesRepository.getMovie(movie.getId(), new MoviesDataSource.GetResourceCallback() {
             @Override
             public void onMovieLoaded(Movie movie) {
@@ -141,6 +131,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private void setMovieUI(Movie movie) {
         mCurrentMovie = movie;
+        String RATING_DENOMINATOR = "/10";
         mMovieDetailsView.showRating(MoviesUtils.ratingWithDenominator(movie.getVoteAverage(), RATING_DENOMINATOR));
         mMovieDetailsView.showReleaseDate(MoviesUtils.stringToDateReport(movie.getReleaseDate()));
         mMovieDetailsView.showSynopsis(movie.getOverview());
@@ -164,7 +155,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMoviesRepository.getMovieRuntime(movie, new MoviesDataSource.GetResourceRunTimeCallback() {
             @Override
             public void onResourceRetrieved(String runtime) {
-                String min = ContextSingleton.getInstance(null).getContext().getResources().getString(R.string.min);
+                String min = PopMovies.getAppContext().getResources().getString(R.string.min);
                 mCurrentMovie.setRunTime(runtime + min);
                 mMovieDetailsView.setRuntime(mCurrentMovie.getRunTime());
                 mMovieDetailsView.setLoadingIndicator(false);
@@ -197,9 +188,14 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     }
 
     @Override
+    public Movie getCurrentMovie() {
+        return mCurrentMovie;
+    }
+
+    @Override
     public void start() {
         /*
-         * Don't use this method on MovieDetail.
+         * Don't call start on MovieDetail.
          */
         throw new RuntimeException();
     }

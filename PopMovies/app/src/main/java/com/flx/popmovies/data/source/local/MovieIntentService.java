@@ -11,11 +11,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.flx.popmovies.PopMovies;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.MovieResults;
-import com.flx.popmovies.util.ContextSingleton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +29,8 @@ public class MovieIntentService extends JobIntentService {
     public static final String ACTION_SAVE_MOVIE_TO_DB = "ACTION_SAVE_MOVIE_TO_DB";
     public static final String ACTION_REMOVE_FAVORITE = "ACTION_REMOVE_FAVORITE";
     public static final String ACTION_SAVE_POSTER_IMAGE = "ACTION_SAVE_POSTER_IMAGE";
-
+    public static final String ACTION_SAVED_POSTER_IMAGE = "ACTION_SAVED_POSTER_IMAGE";
+    public static final String ACTION_RETRIEVED_MOVIE_FROM_DB = "ACTION_RETRIEVED_MOVIE_FROM_DB";
     public static final String RESULT_MOVIES = "RESULT_MOVIES";
     public static final String RESULT_MOVIE = "RESULT_MOVIE";
     public static final String REMOVE_FAVORITE = "REMOVE_FAVORITE";
@@ -41,42 +41,48 @@ public class MovieIntentService extends JobIntentService {
     public static final String SAVE_POSTER_IMAGE_PARCEL = "SAVE_POSTER_IMAGE_PARCEL";
     public static final String SAVE_POSTER_PATH = "SAVE_POSTER_PATH";
     public static final String MOVIE_SAVED = "MOVIE_SAVED";
-    public static final String ACTION_SAVED_POSTER_IMAGE = "ACTION_SAVED_POSTER_IMAGE";
-    public static final String ACTION_RETRIEVED_MOVIE_FROM_DB = "ACTION_RETRIEVED_MOVIE_FROM_DB";
-    public static final String MOVIE_RETREIVED = "MOVIE_RETREIVED";
-    public static final String FAVORITES_RETREIVED = "FAVORITES_RETREIVED";
+    public static final String MOVIE_RETRIEVED = "MOVIE_RETREIVED";
+    public static final String FAVORITES_RETRIEVED = "FAVORITES_RETREIVED";
     public static final String REMOVED_FAVORITE = "REMOVED_FAVORITE";
-
-    public static final int FAVORITE = 1;
+    private static final String SAVE_DIRECTORY = "imageDir";
+    private static final int FAVORITE = 1;
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         String action = intent.getAction();
-        Log.d("ACTION NAME", action.toString());
-        if (action.equals(ACTION_GET_FAVORITES_FROM_DB)) {
-            getFavorites();
-        } else if (action.equals(ACTION_REMOVE_FAVORITE)) {
-            long movieId;
-            movieId = intent.getLongExtra(REMOVE_FAVORITE, 0);
-            removeFavorite(movieId);
-        } else if (action.equals(ACTION_GET_MOVIE_FROM_DB)) {
-            long movieId = intent.getLongExtra(RESULT_MOVIE, 0);
-            getSavedMovie(movieId);
-        } else if (action.equals(ACTION_SAVE_MOVIE_TO_DB)) {
-            Movie movie = intent.getParcelableExtra(SAVE_MOVIE_PARCEL);
-            int favorite = intent.getIntExtra(SAVE_MOVIE_FAVORITE, FAVORITE);
-            saveMovie(movie, favorite);
-        } else if (action.equals(ACTION_SAVE_POSTER_IMAGE)) {
-            Bitmap bitmap = intent.getParcelableExtra(SAVE_POSTER_IMAGE_PARCEL);
-            String path = intent.getStringExtra(SAVE_POSTER_PATH);
-            savePosterImage(path, bitmap);
+        assert action != null;
+        switch (action) {
+            case ACTION_GET_FAVORITES_FROM_DB:
+                getFavorites();
+                break;
+            case ACTION_REMOVE_FAVORITE: {
+                long movieId;
+                movieId = intent.getLongExtra(REMOVE_FAVORITE, 0);
+                removeFavorite(movieId);
+                break;
+            }
+            case ACTION_GET_MOVIE_FROM_DB: {
+                long movieId = intent.getLongExtra(RESULT_MOVIE, 0);
+                getSavedMovie(movieId);
+                break;
+            }
+            case ACTION_SAVE_MOVIE_TO_DB:
+                Movie movie = intent.getParcelableExtra(SAVE_MOVIE_PARCEL);
+                int favorite = intent.getIntExtra(SAVE_MOVIE_FAVORITE, FAVORITE);
+                saveMovie(movie, favorite);
+                break;
+            case ACTION_SAVE_POSTER_IMAGE:
+                Bitmap bitmap = intent.getParcelableExtra(SAVE_POSTER_IMAGE_PARCEL);
+                String path = intent.getStringExtra(SAVE_POSTER_PATH);
+                savePosterImage(path, bitmap);
+                break;
         }
     }
 
-    public void savePosterImage(String path, Bitmap posterImage) {
-        ContextWrapper cw = new ContextWrapper(ContextSingleton.getInstance(null).getContext());
+    private void savePosterImage(String path, Bitmap posterImage) {
+        ContextWrapper cw = new ContextWrapper(PopMovies.getAppContext());
 
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File directory = cw.getDir(SAVE_DIRECTORY, Context.MODE_PRIVATE);
 
         File imagePath = new File(directory, path);
 
@@ -93,14 +99,14 @@ public class MovieIntentService extends JobIntentService {
                     out.close();
                     Intent localIntent = new Intent(ACTION_SAVE_POSTER_IMAGE);
                     localIntent.putExtra(RESULT_POSTER_SAVED, true);
-                    LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                    LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                             .sendBroadcast(localIntent);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 Intent localIntent = new Intent(ACTION_SAVED_POSTER_IMAGE);
                 localIntent.putExtra(RESULT_POSTER_SAVED, false);
-                LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+                LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                         .sendBroadcast(localIntent);
             }
         }
@@ -121,14 +127,14 @@ public class MovieIntentService extends JobIntentService {
                             null);
         } catch (Exception e) {
             Intent localIntent = new Intent(ACTION_RETRIEVED_MOVIE_FROM_DB);
-            LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+            LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                     .sendBroadcast(localIntent);
             return;
         }
 
         if (cursor == null) {
             Intent localIntent = new Intent(ACTION_RETRIEVED_MOVIE_FROM_DB);
-            LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+            LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                     .sendBroadcast(localIntent);
 
             return;
@@ -136,15 +142,15 @@ public class MovieIntentService extends JobIntentService {
 
         if (!cursor.moveToNext()) {
             Intent localIntent = new Intent(ACTION_RETRIEVED_MOVIE_FROM_DB);
-            LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+            LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                     .sendBroadcast(localIntent);
 
             return;
         }
 
         Intent localIntent = new Intent(ACTION_RETRIEVED_MOVIE_FROM_DB);
-        localIntent.putExtra(MOVIE_RETREIVED, buildMovie(cursor));
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+        localIntent.putExtra(MOVIE_RETRIEVED, buildMovie(cursor));
+        LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                 .sendBroadcast(localIntent);
 
     }
@@ -160,7 +166,7 @@ public class MovieIntentService extends JobIntentService {
 
         Intent localIntent = new Intent(REMOVED_FAVORITE);
         localIntent.putExtra(REMOVE_FAVORITE, numDeleted);
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+        LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                 .sendBroadcast(localIntent);
     }
 
@@ -175,15 +181,15 @@ public class MovieIntentService extends JobIntentService {
                             null,
                             null);
         } catch (Exception e) {
-            Intent localIntent = new Intent(FAVORITES_RETREIVED);
-            LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+            Intent localIntent = new Intent(FAVORITES_RETRIEVED);
+            LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                     .sendBroadcast(localIntent);
             return;
         }
 
         if (cursor == null) {
-            Intent localIntent = new Intent(FAVORITES_RETREIVED);
-            LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+            Intent localIntent = new Intent(FAVORITES_RETRIEVED);
+            LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                     .sendBroadcast(localIntent);
 
             return;
@@ -201,13 +207,13 @@ public class MovieIntentService extends JobIntentService {
         MovieResults movieResults = new MovieResults();
         movieResults.setMovies(movies);
 
-        Intent localIntent = new Intent(FAVORITES_RETREIVED);
+        Intent localIntent = new Intent(FAVORITES_RETRIEVED);
         localIntent.putExtra(RESULT_MOVIES, movieResults);
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+        LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                 .sendBroadcast(localIntent);
     }
 
-    public void saveMovie(Movie movie, int isFavorite) {
+    private void saveMovie(Movie movie, int isFavorite) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(MoviesContract.MovieEntry.COLUMN_ID, movie.getId());
@@ -219,7 +225,7 @@ public class MovieIntentService extends JobIntentService {
         contentValues.put(MoviesContract.MovieEntry.COLUMN_IS_FAVORITE, isFavorite);
         contentValues.put(MoviesContract.MovieEntry.COLUMN_RUNTIME, movie.getRunTime());
 
-        Uri uri = ContextSingleton.getInstance(null).getContext()
+        Uri uri = PopMovies.getAppContext()
                 .getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, contentValues);
 
 
@@ -231,7 +237,7 @@ public class MovieIntentService extends JobIntentService {
         Intent localIntent = new Intent(RESULT_MOVIE_SAVED);
         localIntent.putExtra(MOVIE_SAVED, saveResult);
 
-        LocalBroadcastManager.getInstance(ContextSingleton.getInstance(null).getContext())
+        LocalBroadcastManager.getInstance(PopMovies.getAppContext())
                 .sendBroadcast(localIntent);
     }
 

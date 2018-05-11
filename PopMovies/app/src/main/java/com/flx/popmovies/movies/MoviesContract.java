@@ -6,7 +6,7 @@ import com.flx.popmovies.data.Movie;
 
 import java.util.List;
 
-public interface MoviesContract {
+interface MoviesContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -35,5 +35,9 @@ public interface MoviesContract {
         void setOffline();
 
         void menuItemSelected(String menuItemTitle, String currentMenuItemSortTitle, String favoritesActionTitle);
+
+        void refreshContent();
+
+        String getLastMenuItemSelected();
     }
 }

@@ -11,7 +11,7 @@ import com.flx.popmovies.data.Trailer;
 
 import java.util.List;
 
-public interface MovieDetailsContract {
+interface MovieDetailsContract {
 
     interface View extends BaseView<Presenter> {
         void setLoadingIndicator(boolean active);
@@ -59,5 +59,7 @@ public interface MovieDetailsContract {
         void start(Movie movie);
 
         void setConnectionStatus(boolean connectionStatus);
+
+        Movie getCurrentMovie();
     }
 }

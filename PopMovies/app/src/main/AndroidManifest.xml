@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name="com.flx.popmovies.PopMovies"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,7 +22,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".moviedetails.DetailsActivity"
-            android:label="@string/movie_detail_label">
+            android:label="@string/movie_detail_label"
+            android:parentActivityName=".movies.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".movies.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

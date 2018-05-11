@@ -12,19 +12,18 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Objects;
+
 public class MovieContentProvider extends ContentProvider {
 
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
 
     private MovieDbHelper mMovieDbHelper;
-
-    private static UriMatcher sUriMatcher = buildUriMatcher();
-
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     @Override
     public boolean onCreate() {
-
         Context context = getContext();
         mMovieDbHelper = new MovieDbHelper(context);
 
@@ -68,7 +67,7 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
 
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        retCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
 
         return retCursor;
     }
@@ -104,7 +103,7 @@ public class MovieContentProvider extends ContentProvider {
         }
 
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
         return returnUri;
     }
@@ -129,9 +128,7 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if (numberDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
+        if (numberDeleted != 0) Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
         return numberDeleted;
     }
