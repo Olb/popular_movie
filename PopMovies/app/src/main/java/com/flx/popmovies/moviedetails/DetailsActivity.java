@@ -35,6 +35,7 @@ import com.flx.popmovies.data.source.remote.MoviesRemoteDataSource;
 import com.flx.popmovies.util.Constants;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
@@ -211,6 +212,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showImage(String path) {
+        Log.d("FINAL PATH", path);
         Picasso.get().load(path).into(mMoviePosterImageView);
     }
 
@@ -306,5 +308,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     @Override
     public void setOnline() {
         findViewById(R.id.fl_offline_contents).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSavedImage(File file) {
+        Log.d("RETRIEVE PATH", file.getPath());
+        Picasso.get().load(file).into(mMoviePosterImageView);
+
     }
 }

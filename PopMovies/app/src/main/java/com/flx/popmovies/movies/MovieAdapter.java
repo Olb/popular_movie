@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.flx.popmovies.PopMovies;
 import com.flx.popmovies.R;
 import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.util.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
@@ -73,8 +75,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         void bind(int position) {
             Movie movie = mMovieList.get(position);
-            String moviePath = NetworkUtils.IMAGES_BASE_URL + movie.getPosterPath();
-            Picasso.get().load(moviePath).into(mMovieImageView);
+            if (mMovieList.get(position).getIsFavorite() != 0) {
+                File directory = PopMovies.getAppContext().getDir("imageDir", Context.MODE_PRIVATE);
+                File imagePath = new File(directory, movie.getPosterPath());
+                Picasso.get().load(imagePath).into(mMovieImageView);
+            } else {
+                String moviePath = NetworkUtils.IMAGES_BASE_URL + movie.getPosterPath();
+                Picasso.get().load(moviePath).into(mMovieImageView);
+            }
         }
 
         @Override

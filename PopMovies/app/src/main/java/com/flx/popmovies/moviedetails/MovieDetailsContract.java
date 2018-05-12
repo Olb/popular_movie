@@ -9,6 +9,7 @@ import com.flx.popmovies.data.Movie;
 import com.flx.popmovies.data.Review;
 import com.flx.popmovies.data.Trailer;
 
+import java.io.File;
 import java.util.List;
 
 interface MovieDetailsContract {
@@ -43,6 +44,8 @@ interface MovieDetailsContract {
         void setOffline();
 
         void setOnline();
+
+        void showSavedImage(File file);
     }
 
     interface Presenter extends BasePresenter {

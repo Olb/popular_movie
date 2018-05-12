@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.flx.popmovies.PopMovies;
 import com.flx.popmovies.data.Movie;
@@ -86,7 +87,7 @@ public class MovieIntentService extends JobIntentService {
 
         File imagePath = new File(directory, path);
 
-
+        Log.d("ACTUAL SAVE", imagePath.getPath());
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(imagePath);

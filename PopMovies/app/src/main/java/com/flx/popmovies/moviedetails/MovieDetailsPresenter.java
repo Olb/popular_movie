@@ -1,5 +1,6 @@
 package com.flx.popmovies.moviedetails;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.flx.popmovies.data.source.MoviesDataSource;
 import com.flx.popmovies.data.source.MoviesRepository;
 import com.flx.popmovies.util.MoviesUtils;
 
+import java.io.File;
 import java.util.Arrays;
 
 public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
@@ -32,11 +34,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
     @Override
     public void markFavorite() {
 
-        int FAVORITE = 1;
-        mMoviesRepository.saveMovie(mCurrentMovie, FAVORITE, new MoviesDataSource.SaveResourceCallback() {
+        Bitmap posterImageBitmap = mMovieDetailsView.getPosterImage();
+        mMoviesRepository.savePosterImage(mCurrentMovie.getPosterPath(), posterImageBitmap, new MoviesDataSource.SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
-                mMovieDetailsView.setFavoritesMarked(true);
+                Log.d(TAG, "Image saved.");
             }
 
             @Override
@@ -45,11 +47,11 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
             }
         });
 
-        Bitmap posterImageBitmap = mMovieDetailsView.getPosterImage();
-        mMoviesRepository.savePosterImage(mCurrentMovie.getPosterPath(), posterImageBitmap, new MoviesDataSource.SaveResourceCallback() {
+        int FAVORITE = 1;
+        mMoviesRepository.saveMovie(mCurrentMovie, FAVORITE, new MoviesDataSource.SaveResourceCallback() {
             @Override
             public void onResourceSaved() {
-                Log.d(TAG, "Image saved.");
+                mMovieDetailsView.setFavoritesMarked(true);
             }
 
             @Override
@@ -136,11 +138,16 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
         mMovieDetailsView.showReleaseDate(MoviesUtils.stringToDateReport(movie.getReleaseDate()));
         mMovieDetailsView.showSynopsis(movie.getOverview());
         mMovieDetailsView.showTitle(movie.getTitle());
-        mMovieDetailsView.showImage(MoviesUtils.getPosterPath(movie.getPosterPath()));
+        Log.d("FIRST", movie.getPosterPath());
+
         if (movie.getIsFavorite() != 0) {
             mMovieDetailsView.setFavoritesMarked(true);
+            File directory = PopMovies.getAppContext().getDir("imageDir", Context.MODE_PRIVATE);
+            File imagePath = new File(directory, movie.getPosterPath());
+            mMovieDetailsView.showSavedImage(imagePath);
         } else {
             mMovieDetailsView.setFavoritesMarked(false);
+            mMovieDetailsView.showImage(MoviesUtils.getPosterPath(movie.getPosterPath()));
         }
 
         mMovieDetailsView.setLoadingIndicator(false);
