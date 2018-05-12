@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,13 +34,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private static final String LAST_SELECTED = "last-selected";
     private static final String LAST_ACTION_ITEM = "last-action";
     private static final String LAST_FAVORITE_ITEM = "last-favorite";
-
+    private static final String LAST_RECYCLER_STATE = "RECYCLERSTATE";
     private MoviesContract.Presenter mPresenter;
     private MovieAdapter mMovieAdapter;
     private Menu mMenu;
     private String mLastSelected;
     private String mLastAction;
     private String mLastFavorite;
+    RecyclerView mMovieRecyclerView;
+    private Parcelable mState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                      mLastSelected = savedInstanceState.getString(LAST_SELECTED);
                      mLastAction = savedInstanceState.getString(LAST_ACTION_ITEM);
                      mLastFavorite = savedInstanceState.getString(LAST_FAVORITE_ITEM);
+                     mState = savedInstanceState.getParcelable(LAST_RECYCLER_STATE);
                 }
             } else {
                 mPresenter.start();
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         outState.putString(LAST_SELECTED, lastMenuItem);
         outState.putString(LAST_ACTION_ITEM, actionItem);
         outState.putString(LAST_FAVORITE_ITEM, popularItem);
+        outState.putParcelable(LAST_RECYCLER_STATE, mMovieRecyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -93,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     private void prepareMoviesRecyclerView() {
-        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
-
         mMovieAdapter = new MovieAdapter(this);
 
-        RecyclerView mMovieRecyclerView = findViewById(R.id.rv_movie_tiles);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
+        mMovieRecyclerView = findViewById(R.id.rv_movie_tiles);
+
         mMovieRecyclerView.setLayoutManager(layoutManager);
         mMovieRecyclerView.setHasFixedSize(true);
         mMovieRecyclerView.setAdapter(mMovieAdapter);
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         inflater.inflate(R.menu.menu_main, menu);
         mMenu = menu;
         if (mLastSelected != null) {
-            mPresenter.menuItemSelected(mLastSelected, mLastAction, mLastFavorite);
+            mPresenter.menuItemSelected(mLastSelected, mLastFavorite, mLastAction);
         }
         return true;
     }
@@ -140,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     public void showMovies(List<Movie> movieList) {
         findViewById(R.id.tv_no_results_or_error_message).setVisibility(View.INVISIBLE);
         mMovieAdapter.setNewData(movieList);
+        if (mState != null) {
+            mMovieRecyclerView.getLayoutManager().onRestoreInstanceState(mState);
+        }
     }
 
     @Override

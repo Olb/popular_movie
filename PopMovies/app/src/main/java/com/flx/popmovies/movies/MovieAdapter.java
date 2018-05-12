@@ -82,4 +82,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             mOnClickListener.onListItemClick(mMovieList.get(getAdapterPosition()).getId());
         }
     }
+
 }

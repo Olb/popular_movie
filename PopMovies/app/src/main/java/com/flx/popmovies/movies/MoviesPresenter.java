@@ -148,7 +148,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
         switch (mLastMenuItemSelected) {
             case 0:
-                return context.getResources().getString(R.string.menu_favorites);
+                return context.getResources().getString(R.string.menu_popular_sort);
             case 1:
                 return context.getResources().getString(R.string.menu_favorites);
             case 2:

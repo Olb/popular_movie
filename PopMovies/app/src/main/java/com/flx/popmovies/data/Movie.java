@@ -1,6 +1,5 @@
 package com.flx.popmovies.data;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,7 +21,7 @@ public class Movie implements Parcelable {
 
     private String title;
 
-    @ColumnInfo(name = "popularity")
+    @SerializedName("popularity")
     private double popularity;
 
     @SerializedName("poster_path")

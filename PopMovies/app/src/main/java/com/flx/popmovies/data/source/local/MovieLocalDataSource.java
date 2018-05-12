@@ -35,7 +35,6 @@ public class MovieLocalDataSource implements MoviesDataSource {
                 MovieResults movieResults = intent.getParcelableExtra(MovieIntentService.RESULT_MOVIES);
                 LocalBroadcastManager.getInstance(PopMovies.getAppContext()).
                         unregisterReceiver(this);
-
                 if (movieResults == null || movieResults.getMovies() == null) {
                     callback.onDataNotAvailable();
                     return;
