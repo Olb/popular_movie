@@ -63,6 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        public static final String IMAGE_DIR = "imageDir";
         private final ImageView mMovieImageView;
 
         MovieAdapterViewHolder(final View itemView) {
@@ -76,7 +77,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         void bind(int position) {
             Movie movie = mMovieList.get(position);
             if (mMovieList.get(position).getIsFavorite() != 0) {
-                File directory = PopMovies.getAppContext().getDir("imageDir", Context.MODE_PRIVATE);
+                File directory = PopMovies.getAppContext().getDir(IMAGE_DIR, Context.MODE_PRIVATE);
                 File imagePath = new File(directory, movie.getPosterPath());
                 Picasso.get().load(imagePath).into(mMovieImageView);
             } else {

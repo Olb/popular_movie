@@ -14,18 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a37d78cb-3e41-44da-8c2d-c34a5ebebb33" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java" />
     </list>
@@ -54,14 +44,14 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="217">
-              <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="145" selection-end-column="72" />
+              <caret line="145" column="62" lean-forward="false" selection-start-line="145" selection-start-column="62" selection-end-line="145" selection-end-column="62" />
               <folding>
-                <element signature="e#1451#1452#0" expanded="true" />
-                <element signature="e#1509#1510#0" expanded="true" />
-                <element signature="e#1845#1846#0" expanded="true" />
-                <element signature="e#1919#1920#0" expanded="true" />
-                <element signature="e#1983#1984#0" expanded="true" />
-                <element signature="e#2043#2044#0" expanded="true" />
+                <element signature="e#1506#1507#0" expanded="true" />
+                <element signature="e#1564#1565#0" expanded="true" />
+                <element signature="e#1900#1901#0" expanded="true" />
+                <element signature="e#1974#1975#0" expanded="true" />
+                <element signature="e#2038#2039#0" expanded="true" />
+                <element signature="e#2098#2099#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -83,17 +73,17 @@
       <file leaf-file-name="MovieIntentService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="47" column="58" lean-forward="false" selection-start-line="47" selection-start-column="50" selection-end-line="47" selection-end-column="58" />
+            <state relative-caret-position="279">
+              <caret line="230" column="0" lean-forward="false" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MoviesRepository.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MoviesRepository.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="946">
+            <state relative-caret-position="300">
               <caret line="159" column="0" lean-forward="false" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
               <folding />
             </state>
@@ -110,11 +100,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MovieAdapter.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MovieAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="80" column="44" lean-forward="false" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
+            <state relative-caret-position="283">
+              <caret line="79" column="66" lean-forward="false" selection-start-line="79" selection-start-column="66" selection-end-line="79" selection-end-column="66" />
               <folding />
             </state>
           </provider>
@@ -134,17 +124,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_details.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="MoviesDataSource.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesDataSource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="44" lean-forward="false" selection-start-line="9" selection-start-column="44" selection-end-line="10" selection-end-column="35" />
-              <folding>
-                <element signature="e#7133#7150#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="400">
+              <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -152,32 +137,36 @@
       <file leaf-file-name="DetailsActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
-              <caret line="314" column="47" lean-forward="false" selection-start-line="314" selection-start-column="47" selection-end-line="314" selection-end-column="47" />
+            <state relative-caret-position="-3777">
+              <caret line="43" column="75" lean-forward="false" selection-start-line="43" selection-start-column="75" selection-end-line="43" selection-end-column="75" />
               <folding>
-                <element signature="e#4064#4065#0" expanded="true" />
-                <element signature="e#4095#4096#0" expanded="true" />
-                <element signature="e#7483#7667#0" expanded="true" />
-                <element signature="e#7666#7667#0" expanded="true" />
-                <element signature="e#7755#7756#0" expanded="true" />
-                <element signature="e#7805#7806#0" expanded="true" />
-                <element signature="e#7868#7869#0" expanded="true" />
-                <element signature="e#7924#7925#0" expanded="true" />
-                <element signature="e#8220#8271#0" expanded="true" />
-                <element signature="e#8445#8494#0" expanded="true" />
-                <element signature="e#8684#8685#0" expanded="true" />
-                <element signature="e#8736#8737#0" expanded="true" />
-                <element signature="e#9600#9601#0" expanded="true" />
-                <element signature="e#9638#9639#0" expanded="true" />
-                <element signature="e#9801#9852#0" expanded="true" />
-                <element signature="e#10035#10036#0" expanded="true" />
-                <element signature="e#10084#10085#0" expanded="true" />
-                <element signature="e#10644#10645#0" expanded="true" />
-                <element signature="e#10693#10694#0" expanded="true" />
-                <element signature="e#10739#10740#0" expanded="true" />
-                <element signature="e#10817#10818#0" expanded="true" />
-                <element signature="e#10862#10863#0" expanded="true" />
-                <element signature="e#10941#10942#0" expanded="true" />
+                <element signature="e#4258#4259#0" expanded="true" />
+                <element signature="e#4289#4290#0" expanded="true" />
+                <element signature="e#7615#7799#0" expanded="true" />
+                <element signature="e#7798#7799#0" expanded="true" />
+                <element signature="e#7887#7888#0" expanded="true" />
+                <element signature="e#7937#7938#0" expanded="true" />
+                <element signature="e#8000#8001#0" expanded="true" />
+                <element signature="e#8056#8057#0" expanded="true" />
+                <element signature="e#8112#8113#0" expanded="true" />
+                <element signature="e#8180#8181#0" expanded="true" />
+                <element signature="e#8317#8368#0" expanded="true" />
+                <element signature="e#8542#8591#0" expanded="true" />
+                <element signature="e#8781#8782#0" expanded="true" />
+                <element signature="e#8833#8834#0" expanded="true" />
+                <element signature="e#9697#9698#0" expanded="true" />
+                <element signature="e#9735#9736#0" expanded="true" />
+                <element signature="e#9898#9949#0" expanded="true" />
+                <element signature="e#10132#10133#0" expanded="true" />
+                <element signature="e#10181#10182#0" expanded="true" />
+                <element signature="e#10741#10742#0" expanded="true" />
+                <element signature="e#10790#10791#0" expanded="true" />
+                <element signature="e#10836#10837#0" expanded="true" />
+                <element signature="e#10914#10915#0" expanded="true" />
+                <element signature="e#10959#10960#0" expanded="true" />
+                <element signature="e#11038#11039#0" expanded="true" />
+                <element signature="e#11097#11098#0" expanded="true" />
+                <element signature="e#11165#11166#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2302,11 +2291,11 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_details.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MoviesPresenter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java" />
       </list>
     </option>
   </component>
@@ -2822,6 +2811,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1371" height="797" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31075996" sideWeight="0.51648355" order="2" side_tool="true" content_ui="tabs" />
@@ -3113,14 +3103,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesDataSource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/Movie.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -3177,66 +3159,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="47" column="38" lean-forward="false" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieLocalDataSource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="825">
           <caret line="151" column="24" lean-forward="false" selection-start-line="151" selection-start-column="24" selection-end-line="151" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="946">
-          <caret line="159" column="0" lean-forward="false" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="314" column="47" lean-forward="false" selection-start-line="314" selection-start-column="47" selection-end-line="314" selection-end-column="47" />
-          <folding>
-            <element signature="e#4064#4065#0" expanded="true" />
-            <element signature="e#4095#4096#0" expanded="true" />
-            <element signature="e#7483#7667#0" expanded="true" />
-            <element signature="e#7666#7667#0" expanded="true" />
-            <element signature="e#7755#7756#0" expanded="true" />
-            <element signature="e#7805#7806#0" expanded="true" />
-            <element signature="e#7868#7869#0" expanded="true" />
-            <element signature="e#7924#7925#0" expanded="true" />
-            <element signature="e#8220#8271#0" expanded="true" />
-            <element signature="e#8445#8494#0" expanded="true" />
-            <element signature="e#8684#8685#0" expanded="true" />
-            <element signature="e#8736#8737#0" expanded="true" />
-            <element signature="e#9600#9601#0" expanded="true" />
-            <element signature="e#9638#9639#0" expanded="true" />
-            <element signature="e#9801#9852#0" expanded="true" />
-            <element signature="e#10035#10036#0" expanded="true" />
-            <element signature="e#10084#10085#0" expanded="true" />
-            <element signature="e#10644#10645#0" expanded="true" />
-            <element signature="e#10693#10694#0" expanded="true" />
-            <element signature="e#10739#10740#0" expanded="true" />
-            <element signature="e#10817#10818#0" expanded="true" />
-            <element signature="e#10862#10863#0" expanded="true" />
-            <element signature="e#10941#10942#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="47" column="58" lean-forward="false" selection-start-line="47" selection-start-column="50" selection-end-line="47" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -3253,25 +3179,93 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="79" column="66" lean-forward="false" selection-start-line="79" selection-start-column="66" selection-end-line="79" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsPresenter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
-          <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="145" selection-end-column="72" />
+          <caret line="145" column="62" lean-forward="false" selection-start-line="145" selection-start-column="62" selection-end-line="145" selection-end-column="62" />
           <folding>
-            <element signature="e#1451#1452#0" expanded="true" />
-            <element signature="e#1509#1510#0" expanded="true" />
-            <element signature="e#1845#1846#0" expanded="true" />
-            <element signature="e#1919#1920#0" expanded="true" />
-            <element signature="e#1983#1984#0" expanded="true" />
-            <element signature="e#2043#2044#0" expanded="true" />
+            <element signature="e#1506#1507#0" expanded="true" />
+            <element signature="e#1564#1565#0" expanded="true" />
+            <element signature="e#1900#1901#0" expanded="true" />
+            <element signature="e#1974#1975#0" expanded="true" />
+            <element signature="e#2038#2039#0" expanded="true" />
+            <element signature="e#2098#2099#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/movies/MovieAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/DetailsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="80" column="44" lean-forward="false" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
+        <state relative-caret-position="-3777">
+          <caret line="43" column="75" lean-forward="false" selection-start-line="43" selection-start-column="75" selection-end-line="43" selection-end-column="75" />
+          <folding>
+            <element signature="e#4258#4259#0" expanded="true" />
+            <element signature="e#4289#4290#0" expanded="true" />
+            <element signature="e#7615#7799#0" expanded="true" />
+            <element signature="e#7798#7799#0" expanded="true" />
+            <element signature="e#7887#7888#0" expanded="true" />
+            <element signature="e#7937#7938#0" expanded="true" />
+            <element signature="e#8000#8001#0" expanded="true" />
+            <element signature="e#8056#8057#0" expanded="true" />
+            <element signature="e#8112#8113#0" expanded="true" />
+            <element signature="e#8180#8181#0" expanded="true" />
+            <element signature="e#8317#8368#0" expanded="true" />
+            <element signature="e#8542#8591#0" expanded="true" />
+            <element signature="e#8781#8782#0" expanded="true" />
+            <element signature="e#8833#8834#0" expanded="true" />
+            <element signature="e#9697#9698#0" expanded="true" />
+            <element signature="e#9735#9736#0" expanded="true" />
+            <element signature="e#9898#9949#0" expanded="true" />
+            <element signature="e#10132#10133#0" expanded="true" />
+            <element signature="e#10181#10182#0" expanded="true" />
+            <element signature="e#10741#10742#0" expanded="true" />
+            <element signature="e#10790#10791#0" expanded="true" />
+            <element signature="e#10836#10837#0" expanded="true" />
+            <element signature="e#10914#10915#0" expanded="true" />
+            <element signature="e#10959#10960#0" expanded="true" />
+            <element signature="e#11038#11039#0" expanded="true" />
+            <element signature="e#11097#11098#0" expanded="true" />
+            <element signature="e#11165#11166#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/moviedetails/MovieDetailsContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="47" column="38" lean-forward="false" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/local/MovieIntentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="230" column="0" lean-forward="false" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesDataSource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/flx/popmovies/data/source/MoviesRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="159" column="0" lean-forward="false" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
           <folding />
         </state>
       </provider>

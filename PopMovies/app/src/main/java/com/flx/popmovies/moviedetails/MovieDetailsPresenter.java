@@ -20,6 +20,7 @@ import java.util.Arrays;
 public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
     private final static String TAG = MovieDetailsPresenter.class.getSimpleName();
+    public static final String IMAGE_DIR = "imageDir";
     private final MovieDetailsContract.View mMovieDetailsView;
     private final MoviesRepository mMoviesRepository;
 
@@ -142,7 +143,7 @@ public class MovieDetailsPresenter implements MovieDetailsContract.Presenter {
 
         if (movie.getIsFavorite() != 0) {
             mMovieDetailsView.setFavoritesMarked(true);
-            File directory = PopMovies.getAppContext().getDir("imageDir", Context.MODE_PRIVATE);
+            File directory = PopMovies.getAppContext().getDir(IMAGE_DIR, Context.MODE_PRIVATE);
             File imagePath = new File(directory, movie.getPosterPath());
             mMovieDetailsView.showSavedImage(imagePath);
         } else {

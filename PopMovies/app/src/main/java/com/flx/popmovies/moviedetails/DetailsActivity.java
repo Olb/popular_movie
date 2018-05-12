@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +41,9 @@ import java.util.Objects;
 public class DetailsActivity extends AppCompatActivity implements MovieDetailsContract.View, TrailersAdapter.ListItemClickListener {
 
     private static final String CURRENT_MOVIE = "current-movie";
+    public static final String SAVED_INSTANCE_STATE = "scrollview-save-sate";
+    public static final String MOVIE_STATE = "movie-saved-state";
+    public static final String REVIEW_STATE = "review-saved-state";
 
     private MovieDetailsContract.Presenter mPresenter;
     private TextView mMovieTitleTextView;
@@ -88,8 +90,8 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
             if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_MOVIE)) {
                 movie = savedInstanceState.getParcelable(CURRENT_MOVIE);
-                mMovieState = savedInstanceState.getParcelable("STATE1");
-                mReviewState = savedInstanceState.getParcelable("STATE2");
+                mMovieState = savedInstanceState.getParcelable(MOVIE_STATE);
+                mReviewState = savedInstanceState.getParcelable(REVIEW_STATE);
 
             } else {
                 movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
@@ -110,12 +112,10 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("CAlling me", "Calling me");
         outState.putParcelable(CURRENT_MOVIE, mPresenter.getCurrentMovie());
-        outState.putParcelable("STATE1", mMovieRecyclerView.getLayoutManager().onSaveInstanceState());
-        outState.putParcelable("STATE2", mReviewRecyclerView.getLayoutManager().onSaveInstanceState());
-        outState.putIntArray("ARTICLE_SCROLL_POSITION",
-                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+        outState.putParcelable(MOVIE_STATE, mMovieRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(REVIEW_STATE, mReviewRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putIntArray(SAVED_INSTANCE_STATE, new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
     }
 
     @Override
@@ -189,7 +189,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         } else {
             mProgressBar.setVisibility(View.INVISIBLE);
             if (mSaveInstanceState != null) {
-                final int[] position = mSaveInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+                final int[] position = mSaveInstanceState.getIntArray(SAVED_INSTANCE_STATE);
                 if(position != null)
                     mScrollView.post(new Runnable() {
                         public void run() {
@@ -212,7 +212,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showImage(String path) {
-        Log.d("FINAL PATH", path);
         Picasso.get().load(path).into(mMoviePosterImageView);
     }
 
@@ -312,8 +311,6 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showSavedImage(File file) {
-        Log.d("RETRIEVE PATH", file.getPath());
         Picasso.get().load(file).into(mMoviePosterImageView);
-
     }
 }

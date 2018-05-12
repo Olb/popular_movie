@@ -229,7 +229,6 @@ public class MovieIntentService extends JobIntentService {
         Uri uri = PopMovies.getAppContext()
                 .getContentResolver().insert(MoviesContract.MovieEntry.CONTENT_URI, contentValues);
 
-
         boolean saveResult = false;
         if (uri != null) {
             saveResult = true;
