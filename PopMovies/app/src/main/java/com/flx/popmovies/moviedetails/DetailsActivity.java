@@ -9,11 +9,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +53,12 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     private Button mFavoritesButton;
     private TrailersAdapter mTrailerAdapter;
     private ReviewsAdapter mReviewsAdapter;
+    private RecyclerView mMovieRecyclerView;
+    private RecyclerView mReviewRecyclerView;
+    private Parcelable mMovieState;
+    private Parcelable mReviewState;
+    private NestedScrollView mScrollView;
+    Bundle mSaveInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +70,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
+        mScrollView = findViewById(R.id.sv_detail_scroll_view);
         mMovieTitleTextView = findViewById(R.id.tv_movie_title);
         mMoviePosterImageView = findViewById(R.id.iv_movie_poster);
         mMovieReleaseDateTextView = findViewById(R.id.tv_movie_release_date);
@@ -78,6 +87,9 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         if (intent.hasExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT)) {
             if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_MOVIE)) {
                 movie = savedInstanceState.getParcelable(CURRENT_MOVIE);
+                mMovieState = savedInstanceState.getParcelable("STATE1");
+                mReviewState = savedInstanceState.getParcelable("STATE2");
+
             } else {
                 movie = intent.getParcelableExtra(Constants.COM_POP_MOVIE_DETAILS_INTENT);
             }
@@ -90,10 +102,26 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        Log.d("CAlling me", "Calling me");
         outState.putParcelable(CURRENT_MOVIE, mPresenter.getCurrentMovie());
+        outState.putParcelable("STATE1", mMovieRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable("STATE2", mReviewRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putIntArray("ARTICLE_SCROLL_POSITION",
+                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mSaveInstanceState = savedInstanceState;
     }
 
     private void setupAdapters() {
@@ -101,19 +129,21 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mTrailerAdapter = new TrailersAdapter(this);
 
-        RecyclerView mMovieRecyclerView = findViewById(R.id.rv_trailers);
+        mMovieRecyclerView = findViewById(R.id.rv_trailers);
         mMovieRecyclerView.setLayoutManager(layoutManager);
         mMovieRecyclerView.setFocusable(false);
         mMovieRecyclerView.setHasFixedSize(true);
+        mMovieRecyclerView.setNestedScrollingEnabled(false);
         mMovieRecyclerView.setAdapter(mTrailerAdapter);
 
         LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this);
         mReviewsAdapter = new ReviewsAdapter();
 
-        RecyclerView mReviewRecyclerView = findViewById(R.id.rv_reviews);
+        mReviewRecyclerView = findViewById(R.id.rv_reviews);
         mReviewRecyclerView.setLayoutManager(reviewLayoutManager);
         mReviewRecyclerView.setFocusable(false);
         mReviewRecyclerView.setHasFixedSize(true);
+        mReviewRecyclerView.setNestedScrollingEnabled(false);
         mReviewRecyclerView.setAdapter(mReviewsAdapter);
     }
 
@@ -157,6 +187,15 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.INVISIBLE);
+            if (mSaveInstanceState != null) {
+                final int[] position = mSaveInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+                if(position != null)
+                    mScrollView.post(new Runnable() {
+                        public void run() {
+                            mScrollView.scrollTo(position[0], position[1]);
+                        }
+                    });
+            }
         }
     }
 
@@ -203,11 +242,17 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailsCo
 
     @Override
     public void showTrailers(List<Trailer> trailers) {
+        if (mMovieState != null) {
+            mMovieRecyclerView.getLayoutManager().onRestoreInstanceState(mMovieState);
+        }
         mTrailerAdapter.setNewData(trailers);
     }
 
     @Override
     public void showReviews(List<Review> reviews) {
+        if (mReviewState != null) {
+            mMovieRecyclerView.getLayoutManager().onRestoreInstanceState(mMovieState);
+        }
         mReviewsAdapter.setNewData(reviews);
     }
 
